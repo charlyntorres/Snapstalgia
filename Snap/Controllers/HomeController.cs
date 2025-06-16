@@ -18,6 +18,11 @@ namespace Snap.Controllers
             return View();
         }
 
+        public IActionResult Start()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
