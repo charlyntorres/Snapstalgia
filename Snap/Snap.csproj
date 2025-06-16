@@ -6,4 +6,25 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="wwwroot\images\temp\session_13f32dbe-6cff-427f-a466-1835347eb081_1_20250616_162402.jpg" />
+    <Content Remove="wwwroot\images\temp\session_13f32dbe-6cff-427f-a466-1835347eb081_2_20250616_162403.jpg" />
+    <Content Remove="wwwroot\images\temp\session_13f32dbe-6cff-427f-a466-1835347eb081_3_20250616_162404.jpg" />
+    <Content Remove="wwwroot\images\temp\session_13f32dbe-6cff-427f-a466-1835347eb081_4_20250616_162404.jpg" />
+    <Content Remove="wwwroot\images\temp\session_13f32dbe-6cff-427f-a466-1835347eb081_5_20250616_162407.jpg" />
+    <Content Remove="wwwroot\images\temp\session_7baf61b1-8316-4119-a4f5-ef1146f06b7b_1_20250616_162621.jpg" />
+    <Content Remove="wwwroot\images\temp\session_7baf61b1-8316-4119-a4f5-ef1146f06b7b_2_20250616_162624.jpg" />
+    <Content Remove="wwwroot\images\temp\session_7baf61b1-8316-4119-a4f5-ef1146f06b7b_3_20250616_162626.jpg" />
+    <Content Remove="wwwroot\images\temp\session_7baf61b1-8316-4119-a4f5-ef1146f06b7b_4_20250616_162628.jpg" />
+    <Content Remove="wwwroot\images\temp\session_abc123_1_20250616_152855.jpg" />
+    <Content Remove="wwwroot\images\temp\session_abc123_1_20250616_154728.jpg" />
+    <Content Remove="wwwroot\images\temp\session_abc123_2_20250616_154730.jpg" />
+    <Content Remove="wwwroot\images\temp\session_abc123_3_20250616_154733.jpg" />
+    <Content Remove="wwwroot\images\temp\session_abc123_3_20250616_154735.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\temp\" />
+  </ItemGroup>
+
 </Project>
