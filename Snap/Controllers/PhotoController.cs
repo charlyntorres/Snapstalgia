@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Snap.Models;
+using Snap.Helpers;
 
 namespace Snap.Controllers
 {
@@ -17,6 +18,14 @@ namespace Snap.Controllers
 
             try
             {
+                // Validate layout type
+                var dimensions = LayoutPresets.GetDimensions(request.LayoutType);
+                var grid = LayoutPresets.GetGrid(request.LayoutType);
+
+                // Override dimensions if provided
+                request.Width = dimensions.Width;
+                request.Height = dimensions.Height;
+
                 var base64Data = request.Base64Image.Contains(",")
                     ? request.Base64Image.Split(',')[1] 
                     : request.Base64Image;
@@ -39,10 +48,16 @@ namespace Snap.Controllers
                     CapturedAt = timestamp,
                     SessionId = request.SessionId,
                     Sequence = request.Sequence,
-                    LayoutType = request.LayoutType
+                    LayoutType = request.LayoutType,
+                    Width = request.Width,
+                    Height = request.Height
                 };
 
                 return Ok(photo);
+            }
+            catch (NotImplementedException)
+            {
+                return BadRequest($"Unsupported layout type: {request.LayoutType}");
             }
             catch (Exception ex)
             {
