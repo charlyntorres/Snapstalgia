@@ -13,7 +13,7 @@ namespace Snap.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult HomePage()
         {
             return View();
         }
@@ -23,7 +23,7 @@ namespace Snap.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult PrivacyPage()
         {
             return View();
         }
