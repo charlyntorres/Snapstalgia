@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\images\temp\ABC123_1_20250617_170842.jpg" />
+    <Content Remove="wwwroot\images\temp\ABC123_1_20250618_011232.jpg" />
+    <Content Remove="wwwroot\images\temp\ABC123_1_20250618_012105.jpg" />
+    <Content Remove="wwwroot\images\temp\ABC123_1_20250618_012207.jpg" />
+    <Content Remove="wwwroot\images\temp\ABC123_1_20250618_012230.jpg" />
+    <Content Remove="wwwroot\images\temp\ABC123_1_20250618_012240.jpg" />
     <Content Remove="wwwroot\images\temp\session_13f32dbe-6cff-427f-a466-1835347eb081_1_20250616_162402.jpg" />
     <Content Remove="wwwroot\images\temp\session_13f32dbe-6cff-427f-a466-1835347eb081_2_20250616_162403.jpg" />
     <Content Remove="wwwroot\images\temp\session_13f32dbe-6cff-427f-a466-1835347eb081_3_20250616_162404.jpg" />
@@ -24,12 +30,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\images\final\" />
     <Folder Include="wwwroot\images\temp\" />
     <Folder Include="wwwroot\Assets\" />
+    <Folder Include="wwwroot\stickers\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.10" />
+	<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.6" />
+	<PackageReference Include="SixLabors.Fonts" Version="2.1.3" />
   </ItemGroup>
 
 </Project>
