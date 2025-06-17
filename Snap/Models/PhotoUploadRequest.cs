@@ -8,5 +8,7 @@ namespace Snap.Models // Replace with your actual project namespace
         public string SessionId { get; set; }     // Unique ID for the photo session
         public int Sequence { get; set; }         // Sequence number for the photo in the session
         public string LayoutType { get; set; }    // Type of layout (e.g., "2x2", "3x3")
+        public int Width { get; set; }              // Dimensions of the captured photo
+        public int Height { get; set; }             // Dimensions of the captured photo
     }
 }
