@@ -1,12 +1,16 @@
-﻿namespace Snap.Helpers
+﻿using System;
+using System.Collections.Generic;
+
+namespace Snap.Helpers
 {
     public static class LayoutPresets
     {
+        // Supported layouts: row x column
         private static readonly HashSet<string> SupportedLayouts = new()
         {
-            "1x2", 
-            "2x3", 
-            "1x4"  
+            "1x2",
+            "2x3",
+            "1x4"
         };
 
         public static bool IsValidLayout(string layoutType)
@@ -14,27 +18,27 @@
             return !string.IsNullOrEmpty(layoutType) && SupportedLayouts.Contains(layoutType);
         }
 
+        // Optional: returns (width, height) in pixels, can be adjusted per layout if needed
         public static (int Width, int Height) GetDimensions(string layoutType)
         {
             return layoutType switch
             {
-                "1x2" => (400, 820), // Example dimensions for a 2x2 layout
-                "2x3" => (400, 1100), // Example dimensions for a 3x3 layout
-                "1x4" => (400, 1400) // Example dimensions for a 4x4 layout
-,
-                _ => throw new NotImplementedException()
+                "1x2" => (400, 820),
+                "2x3" => (800, 1100),
+                "1x4" => (400, 1400),
+                _ => throw new NotImplementedException($"Dimensions not set for layout {layoutType}")
             };
         }
 
+        // Returns number of rows and columns for given layout string
         public static (int Rows, int Cols) GetGrid(string layoutType)
         {
             return layoutType switch
             {
-                "1x2" => (1, 2), // 1 row, 2 columns
-                "2x3" => (2, 3), // 2 rows, 3 columns
-                "1x4" => (1, 4) // 1 row, 4 columns
-,
-                _ => throw new NotImplementedException()
+                "1x2" => (1, 2),
+                "2x3" => (2, 3),
+                "1x4" => (1, 4),
+                _ => throw new NotImplementedException($"Grid not set for layout {layoutType}")
             };
         }
     }

@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Helpers\ImageExtensions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="wwwroot\images\temp\ABC123_1_20250617_170842.jpg" />
     <Content Remove="wwwroot\images\temp\ABC123_1_20250618_011232.jpg" />
     <Content Remove="wwwroot\images\temp\ABC123_1_20250618_012105.jpg" />

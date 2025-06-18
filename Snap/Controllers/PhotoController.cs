@@ -1,47 +1,51 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Snap.Models;
+using Snap.Services;
 using Snap.Helpers;
 
 namespace Snap.Controllers
 {
-    public class PhotoController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class PhotoController : ControllerBase
     {
-        [HttpPost]       
-        public async Task<IActionResult> UploadPhoto([FromBody] PhotoUploadRequest request)
+        private readonly IFinalImageService _finalImageService;
+
+        public PhotoController(IFinalImageService finalImageService)
         {
-            if (string.IsNullOrWhiteSpace(request.Base64Image) || string.IsNullOrWhiteSpace(request.SessionId))            
-                return BadRequest("Invalid photo upload request.");            
+            _finalImageService = finalImageService;
+        }
+
+        // POST api/photo/upload
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadPhoto([FromForm] PhotoUploadRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.SessionId) || request.File == null)
+                return BadRequest("SessionId and photo file are required.");
 
             try
             {
-                // Validate layout type
-                var (Width, Height) = LayoutPresets.GetDimensions(request.LayoutType);
-                var (Rows, Cols) = LayoutPresets.GetGrid(request.LayoutType);
+                // Validate layout type and get expected grid dimensions
+                var (expectedRows, expectedCols) = LayoutPresets.GetGrid(request.LayoutType);
 
-                // Override dimensions if provided
-                request.Width = Width;
-                request.Height = Height;
+                // Build temp folder path for session
+                var tempSessionFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "temp", request.SessionId);
+                if (!Directory.Exists(tempSessionFolder))
+                    Directory.CreateDirectory(tempSessionFolder);
 
-                var base64Data = request.Base64Image.Contains(',')
-                    ? request.Base64Image.Split(',')[1] 
-                    : request.Base64Image;
-
-                var imageBytes = Convert.FromBase64String(base64Data);
-
+                // Save uploaded file with sequence number to keep order
                 var timestamp = DateTime.Now;
-                
                 var fileName = $"{request.SessionId}_{request.Sequence}_{timestamp:yyyyMMdd_HHmmss}.jpg";
+                var filePath = Path.Combine(tempSessionFolder, fileName);
 
-                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "temp");
-                if (!Directory.Exists(folderPath))                
-                    Directory.CreateDirectory(folderPath);      
-                
-                var filePath = Path.Combine(folderPath, fileName);
-                
-                await System.IO.File.WriteAllBytesAsync(filePath, imageBytes);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await request.File.CopyToAsync(stream);
+                }
 
                 var photo = new CapturedPhoto
                 {
@@ -49,51 +53,56 @@ namespace Snap.Controllers
                     CapturedAt = timestamp,
                     SessionId = request.SessionId,
                     Sequence = request.Sequence,
-                    LayoutType = request.LayoutType,
-                    Width = request.Width,
-                    Height = request.Height
+                    LayoutType = request.LayoutType
                 };
 
                 return Ok(photo);
             }
-            catch (NotImplementedException)
-            {
-                return BadRequest($"Unsupported layout type: {request.LayoutType}");
-            }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Upload error: {ex.Message}.");
+                return StatusCode(500, $"Upload error: {ex.Message}");
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ApplyEdits([FromForm] EditPhotoRequest request)
+        // POST api/photo/compile
+        [HttpPost("compile")]
+        public async Task<IActionResult> CompileAndEdit([FromForm] EditPhotoRequest request)
         {
-            if (string.IsNullOrWhiteSpace(request.EditedBase64Image))
-                return BadRequest("No edited image provided.");
-
             try
             {
-                var base64Data = request.EditedBase64Image.Contains(",")
-                    ? request.EditedBase64Image.Split(',')[1]
-                    : request.EditedBase64Image;
+                if (string.IsNullOrWhiteSpace(request.SessionId) || string.IsNullOrWhiteSpace(request.LayoutType))
+                    return BadRequest("SessionId and LayoutType are required.");
 
-                var imageBytes = Convert.FromBase64String(base64Data);
+                // Validate expected number of photos based on layout
+                var (rows, cols) = LayoutPresets.GetGrid(request.LayoutType);
+                int expectedCount = rows * cols;
 
-                var fileName = $"{request.SessionId}_{request.Sequence}_final_{DateTime.Now:yyyyMMdd_HHmmss}.jpg";
-                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "final");
+                // Check photos exist in temp folder
+                var tempSessionFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "temp", request.SessionId);
+                if (!Directory.Exists(tempSessionFolder))
+                    return BadRequest("No photos uploaded for this session.");
 
-                if (!Directory.Exists(folderPath))
-                    Directory.CreateDirectory(folderPath);
+                var images = Directory.GetFiles(tempSessionFolder, "*.jpg");
+                if (images.Length < expectedCount)
+                    return BadRequest($"Expected {expectedCount} photos but found {images.Length}. Please upload all photos before compiling.");
 
-                var filePath = Path.Combine(folderPath, fileName);
-                await System.IO.File.WriteAllBytesAsync(filePath, imageBytes);
+                // Build FinalImageRequest from EditPhotoRequest
+                var finalRequest = new FinalImageRequest
+                {
+                    SessionId = request.SessionId,
+                    FilterId = request.FilterId,
+                    StickerId = request.StickerId,
+                    FrameColor = request.FrameColor,
+                    IncludeTimestamp = request.IncludeTimestamp
+                };
 
-                return Ok(new { message = "Edited photo saved successfully", fileName });
+                var imagePath = await _finalImageService.GenerateFinalImageAsync(finalRequest);
+
+                return Ok(new { message = "Final image generated successfully.", imagePath });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error saving edited photo: {ex.Message}");
+                return StatusCode(500, $"Error compiling and editing photos: {ex.Message}");
             }
         }
     }
