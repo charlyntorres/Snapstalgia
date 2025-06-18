@@ -1,7 +1,10 @@
+using Snap.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IFinalImageService, FinalImageService>();
 
 var app = builder.Build();
 
