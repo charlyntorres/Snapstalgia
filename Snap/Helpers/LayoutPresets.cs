@@ -21,9 +21,9 @@ namespace Snap.Helpers
         {
             return layoutType switch
             {
-                "1x2" => (400, 740),
-                "1x3" => (400, 1035),
-                "1x4" => (400, 1330),
+                "1x2" => (250, 373),
+                "1x3" => (250, 566),
+                "1x4" => (250, 759),
                 _ => throw new NotImplementedException($"Dimensions not set for layout {layoutType}")
             };
         }
@@ -43,10 +43,21 @@ namespace Snap.Helpers
         {
             return layoutType switch
             {
-                "1x2" => (360, 280),
-                "1x3" => (360, 280),
-                "1x4" => (360, 280),
-                _ => (320, 240)
+                "1x2" => (250, 180),
+                "1x3" => (250, 180),
+                "1x4" => (250, 180),
+                _ => (250, 180)
+            };
+        }
+
+        public static (int FinalWidth, int FinalHeight) GetFinalImageSize(string layoutType)
+        {
+            return layoutType switch
+            {
+                "1x2" => (275, 444),
+                "1x3" => (275, 637),
+                "1x4" => (275, 830),
+                _ => throw new NotImplementedException($"Final image size not set for layout {layoutType}")
             };
         }
     }

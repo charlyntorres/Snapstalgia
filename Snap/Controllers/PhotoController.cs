@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using System;
 using System.IO;
 using System.Linq;
@@ -6,6 +7,10 @@ using System.Threading.Tasks;
 using Snap.Models;
 using Snap.Services;
 using Snap.Helpers;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+
 
 namespace Snap.Controllers
 {
@@ -39,10 +44,10 @@ namespace Snap.Controllers
                 var fileName = $"{request.SessionId}_{request.Sequence}_{timestamp:yyyyMMdd_HHmmss}.jpg";
                 var filePath = Path.Combine(tempSessionFolder, fileName);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await request.File.CopyToAsync(stream);
-                }
+                var (targetWidth, targetHeight) = LayoutPresets.GetPhotoSize(request.LayoutType);
+                using var image = Image.Load<Rgba32>(request.File.OpenReadStream());
+                image.Mutate(ctx => ctx.Resize(250, 180));
+                await image.SaveAsJpegAsync(filePath);
 
                 var (width, height) = LayoutPresets.GetPhotoSize(request.LayoutType);
                 var photo = new CapturedPhoto
@@ -59,7 +64,6 @@ namespace Snap.Controllers
                 return Ok(new
                 {
                     fileName,
-
                     sessionId = request.SessionId,
                     sequence = request.Sequence,
                     capturedAt = timestamp,
@@ -111,6 +115,31 @@ namespace Snap.Controllers
             {
                 return StatusCode(500, $"Error compiling and editing photos: {ex.Message}");
             }
+        }
+
+        // GET api/photo/download/{sessionId}
+        [HttpGet("download/{sessionId}")]
+        public IActionResult DownloadFinalImage(string sessionId)
+        {
+            var finalFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "final");
+
+            // Find latest matching final image for this session
+            var file = Directory.GetFiles(finalFolder, $"{sessionId}_*.jpg")
+                .OrderByDescending(f => new FileInfo(f).CreationTime)
+                .FirstOrDefault();
+
+            if (file == null)
+                return NotFound(new { message = "No final image found for this session." });
+
+            var provider = new FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType(file, out var contentType))
+            {
+                contentType = "application/octet-stream"; // Default content type
+            }
+
+            var bytes = System.IO.File.ReadAllBytes(file);
+            var fileName = Path.GetFileName(file);
+            return File(bytes, contentType, fileName); // Forces download in browser
         }
     }
 }
