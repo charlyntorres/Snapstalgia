@@ -21,7 +21,6 @@ namespace Snap.Services
 
         public async Task<string> GenerateFinalImageAsync(FinalImageRequest request)
         {
-            // Ensure output directory exists
             if (!Directory.Exists(FinalFolder))
                 Directory.CreateDirectory(FinalFolder);
 
@@ -100,7 +99,8 @@ namespace Snap.Services
             if (request.IncludeTimestamp)
             {
                 var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                var font = SystemFonts.CreateFont("Bricolage Grotesque", 18);
+                var fontPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Assets", "Fonts", "BricolageGrotesque-Regular.ttf");
+                var font = TryLoadFont(fontPath, 18);
 
                 var textOptions = new RichTextOptions(font)
                 {
@@ -112,22 +112,21 @@ namespace Snap.Services
                 finalImage.Mutate(ctx => ctx.DrawText(textOptions, timestamp, Color.White));
             }
 
-            // Save final image
             var fileName = $"{request.SessionId}_final_{DateTime.Now:yyyyMMdd_HHmmss}.jpg";
             var filePath = System.IO.Path.Combine(FinalFolder, fileName);
             await finalImage.SaveAsJpegAsync(filePath);
 
-            // Clean up session folder
-            try
-            {
-                Directory.Delete(sessionFolder, recursive: true);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Warning] Could not clean temp folder: {ex.Message}");
-            }
-
             return $"/images/final/{fileName}";
+        }
+
+        private static Font TryLoadFont(string fontPath, float size)
+        {
+            if (!File.Exists(fontPath))
+                throw new FileNotFoundException($"Font file not found at path: {fontPath}");
+
+            var fontCollection = new FontCollection();
+            var fontFamily = fontCollection.Add(fontPath);
+            return fontFamily.CreateFont(size);
         }
     }
 }

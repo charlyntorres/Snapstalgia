@@ -7,16 +7,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\images\preview\**" />
+    <Compile Remove="wwwroot\images\temp\Test123\**" />
+    <Content Remove="wwwroot\images\preview\**" />
+    <Content Remove="wwwroot\images\temp\Test123\**" />
+    <EmbeddedResource Remove="wwwroot\images\preview\**" />
+    <EmbeddedResource Remove="wwwroot\images\temp\Test123\**" />
+    <None Remove="wwwroot\images\preview\**" />
+    <None Remove="wwwroot\images\temp\Test123\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Helpers\ImageExtensions.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\images\final\final_SESSION1_1_20250618_014314.jpg" />
+    <Content Remove="wwwroot\images\final\SESSION1_1_final_20250618_014935.jpg" />
+    <Content Remove="wwwroot\images\final\Test123_final_20250619_000206.jpg" />
     <Content Remove="wwwroot\images\temp\ABC123_1_20250617_170842.jpg" />
     <Content Remove="wwwroot\images\temp\ABC123_1_20250618_011232.jpg" />
     <Content Remove="wwwroot\images\temp\ABC123_1_20250618_012105.jpg" />
     <Content Remove="wwwroot\images\temp\ABC123_1_20250618_012207.jpg" />
     <Content Remove="wwwroot\images\temp\ABC123_1_20250618_012230.jpg" />
     <Content Remove="wwwroot\images\temp\ABC123_1_20250618_012240.jpg" />
+    <Content Remove="wwwroot\images\temp\SESSION1_1_20250618_014314.jpg" />
     <Content Remove="wwwroot\images\temp\session_13f32dbe-6cff-427f-a466-1835347eb081_1_20250616_162402.jpg" />
     <Content Remove="wwwroot\images\temp\session_13f32dbe-6cff-427f-a466-1835347eb081_2_20250616_162403.jpg" />
     <Content Remove="wwwroot\images\temp\session_13f32dbe-6cff-427f-a466-1835347eb081_3_20250616_162404.jpg" />
@@ -36,7 +51,6 @@
   <ItemGroup>
     <Folder Include="wwwroot\images\final\" />
     <Folder Include="wwwroot\images\temp\" />
-    <Folder Include="wwwroot\Assets\" />
     <Folder Include="wwwroot\stickers\" />
   </ItemGroup>
 
@@ -45,6 +59,12 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.10" />
 	<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.6" />
 	<PackageReference Include="SixLabors.Fonts" Version="2.1.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\Assets\Fonts\BricolageGrotesque-Regular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
