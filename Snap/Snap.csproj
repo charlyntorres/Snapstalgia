@@ -36,7 +36,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\images\final\" />
     <Folder Include="wwwroot\images\temp\" />
-    <Folder Include="wwwroot\Assets\" />
+    <Folder Include="wwwroot\fonts\" />
     <Folder Include="wwwroot\stickers\" />
   </ItemGroup>
 
