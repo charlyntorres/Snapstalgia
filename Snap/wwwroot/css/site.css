@@ -5,7 +5,7 @@
 
 @font-face {
     font-family: 'TR Candice';
-    src: url('../assets/Fonts') format('truetype');
+    src: url('../assets/Fonts/TR Candice.TTF') format('truetype');
     font-display: swap;
 }
 
@@ -17,6 +17,7 @@
     --color-accent: #F9E5DA; /*semi-white*/
     --color-light: #EFA5A6; /*light pink*/
     --color-text: #1E1E1E; /*almost black*/
+    --color-button: #354E52; /*dark green*/
     --shadow-default: 1px 1px 4px rgba(0, 0, 0, 0.25);
     --radius-10: 10px;
     --radius-30: 30px;
@@ -125,8 +126,8 @@ p {
     }
 
     .btn-1:hover {
-        background-color: #354E52;
-        box-shadow: 1px 1px 4px rgba(53, 78, 82, 0.5);
+        background-color: var(--color-button);
+        box-shadow: var(--shadow-default);
     }
 
 .btn-2 {
@@ -147,9 +148,9 @@ p {
 }
 
     .btn-2:hover {
-        background-color: #EFA5A6;
-        color: #354E52;
-        box-shadow: 1px 1px 4px rgba(53, 78, 82, 0.5);
+        background-color: var(--color-light);
+        color: var(--color-button);
+        box-shadow: var(--shadow-default);
     }
 
 /*-------------------------------------------------------------------------*/
