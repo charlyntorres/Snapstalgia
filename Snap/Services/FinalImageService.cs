@@ -10,6 +10,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using SixLabors.ImageSharp.Drawing;
 using Snap.Helpers;
+using SixLabors.ImageSharp.Processing.Processors.Filters;
+using SixLabors.ImageSharp.Processing.Processors;
+using System;
 
 namespace Snap.Services
 {
@@ -38,10 +41,70 @@ namespace Snap.Services
             if (imageFiles.Count < expectedCount)
                 throw new Exception($"Not enough images for layout. Expected {expectedCount}, found {imageFiles.Count}.");
 
-            // Load images
-            var images = imageFiles.Take(expectedCount)
-                .Select(f => Image.Load<Rgba32>(f))
-                .ToList();
+            var images = new List<Image<Rgba32>>();
+            foreach (var file in imageFiles.Take(expectedCount))
+            {
+                var image = Image.Load<Rgba32>(file);
+
+                switch (request.FilterId)
+                {
+                    case 1:
+                        ApplyPinterest1Filter(image);   // 90s vintage cam
+                        break;
+                    case 2:
+                        ApplyPinterest2Filter(image);  // RetroPop
+                        break;
+                    case 3:
+                        ApplyPinterest3Filter(image);   // Japancore
+                        break;
+                    case 4:
+                        ApplyPinterest4Filter(image);  // VintageFilm
+                        break;
+                    case 5:
+                        ApplyPinterest5Filter(image);  // RetroSunset
+                        break;
+                    case 6:
+                        ApplyPinterest6Filter(image);    // VSCO dispo c1
+                        break;
+                    case 7:
+                        ApplyPinterest7Filter(image);   // Retro 14+7.0
+                        break;
+                    case 8:
+                        ApplyPinterest8Filter(image);   // G3 portraits
+                        break;
+                    case 9:
+                        ApplyPinterest9Filter(image);   //M4 mood
+                        break;                                       
+                    case 10:
+                        ApplyPinterest10Filter(image);  // BubblegumPop
+                        break;
+                    case 11:
+                        ApplyPinterest11Filter(image); // 90sVHS
+                        break;
+                    case 12:
+                        ApplyPinterest12Filter(image);  // InstantFilm
+                        break;
+                    case 13:
+                        ApplyPinterest13Filter(image);  // GrungeFade
+                        break;
+                    case 14:
+                        ApplyPinterest14Filter(image);  // DustyRose
+                        break;
+                    case 15:
+                        ApplyPinterest15Filter(image);  // MidnightMood
+                        break;
+                    case 16:
+                        ApplyPinterest16Filter(image);  // HoneyDrip
+                        break;
+                    case 17:
+                        ApplyPinterest17Filter(image);  // FilmNoir
+                        break;
+                    default:
+                        break;
+                }
+
+                images.Add(image);
+            }
 
             int photoWidth = images[0].Width;
             int photoHeight = images[0].Height;
@@ -50,7 +113,7 @@ namespace Snap.Services
             int leftMargin = 12;
 
             var (finalWidth, finalHeight) = LayoutPresets.GetFinalImageSize(request.LayoutType);
-            
+
             var frameColor = !string.IsNullOrWhiteSpace(request.FrameColor)
                 ? Color.ParseHex(request.FrameColor)
                 : Color.White;
@@ -63,30 +126,11 @@ namespace Snap.Services
             {
                 //int row = i;
                 int x = leftMargin;
-                int y = topMargin + i * (photoHeight + spacing);                
+                int y = topMargin + i * (photoHeight + spacing);               
 
-                images[i].Mutate(ctx => ctx.ApplyFilter(request.FilterId));
                 finalImage.Mutate(ctx => ctx.DrawImage(images[i], new Point(x, y), 1f));
                 images[i].Dispose();
             }
-
-            // Frame
-            //if (!string.IsNullOrWhiteSpace(request.FrameColor))
-            //{
-            //    try
-            //    {
-            //        var frameColor = Color.ParseHex(request.FrameColor);
-            //        int thickness = 50;
-            //        finalImage.Mutate(ctx =>
-            //        {
-            //            ctx.Draw(frameColor, thickness, new RectangularPolygon(0, 0, finalWidth, finalHeight));
-            //        });
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        throw new ArgumentException($"Invalid frame color string: '{request.FrameColor}'.", ex);
-            //    }
-            //}
 
             // Sticker
             if (request.StickerId.HasValue)
@@ -143,5 +187,333 @@ namespace Snap.Services
             var fontFamily = fontCollection.Add(fontPath);
             return fontFamily.CreateFont(size);
         }
+
+        // GRAIN REMOVE IF PANGET
+        private void AddGrainNoise(Image<Rgba32> image, float intensity = 0.05f)
+        {
+            var random = new Random();
+            int width = image.Width;
+            int height = image.Height;
+
+            image.ProcessPixelRows(accessor =>
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    var row = accessor.GetRowSpan(y);
+                    for (int x = 0; x < width; x++)
+                    {
+                        var pixel = row[x];
+
+                        // Generate a small random brightness adjustment
+                        float noise = (float)(random.NextDouble() * 2 - 1) * intensity;
+
+                        pixel.R = ClampByte(pixel.R + (int)(noise * 255));
+                        pixel.G = ClampByte(pixel.G + (int)(noise * 255));
+                        pixel.B = ClampByte(pixel.B + (int)(noise * 255));
+
+                        row[x] = pixel;
+                    }
+                }
+            });
+        }
+
+        // PART OF GRAIN, REMOVE IF PANGET
+        private byte ClampByte(int value)
+        {
+            return (byte)Math.Clamp(value, 0, 255);
+        }
+
+        // FITLER PINTEREST 1
+        private void ApplyPinterest1Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                ctx.Brightness(1.15f)
+                   .Contrast(0.8f)
+                   .Saturate(1.5f)
+                   .GaussianSharpen(1.5f)
+                   .Vignette(Color.FromRgba(0, 0, 0, 150));
+            });
+
+        }
+
+        // FILTER PINTEREST 2
+        private void ApplyPinterest2Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                // Retro
+                ctx.Contrast(1.3f)
+                   .Saturate(1.5f)
+                   .Brightness(1.1f)
+                   .Hue(15);
+
+                // Color Overlay
+                var overlayColor = Color.FromRgba(255, 204, 153, 50);
+                ctx.Fill(overlayColor);
+            });
+
+            // Grain
+            AddGrainNoise(image, intensity: 0.03f);
+        }
+
+        // FILTER PINTEREST 3
+        private void ApplyPinterest3Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                ctx.Brightness(1.22f)            // brighten midtones
+                   .Contrast(0.72f)              // flat contrast
+                   .Saturate(1.09f)              // soft color pop
+                   .GaussianSharpen(1.1f);       // light sharpness
+            });
+
+            // Optional: Grain or slight overlay for film softness
+            AddGrainNoise(image, 0.012f);
+        }
+
+        // FILTER PINTEREST 4
+        private void ApplyPinterest4Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                ctx.Sepia()
+                   .Saturate(0.85f)
+                   .Contrast(0.9f)
+                   .Brightness(1.05f)
+                   .Hue(15)
+                   .Vignette(Color.FromRgba(0, 0, 0, 100));
+            });
+
+            AddGrainNoise(image, intensity: 0.015f);
+        }
+
+        // FILTER PINTEREST 5
+        private static void ApplyPinterest5Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                ctx.Hue(25)
+                   .Saturate(1.8f)
+                   .Contrast(1.2f)
+                   .Brightness(1.05f);
+
+                var gradient = new LinearGradientBrush(
+                    new PointF(0, 0),
+                    new PointF(0, image.Height),
+                    GradientRepetitionMode.None,
+                    new ColorStop(0f, Color.FromRgba(255, 183, 76, 70)), // orange top
+                    new ColorStop(1f, Color.FromRgba(255, 94, 151, 70))  // pink bottom
+                );
+
+                ctx.Fill(gradient);
+            });
+        }
+
+        // FILTER PINTEREST 6
+        private void ApplyPinterest6Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                ctx.Brightness(1.05f)              // Exposure +0.5
+                   .Contrast(1.25f)                // Punch up contrast
+                   .Saturate(1.15f)                // Slight saturation boost
+                   .Hue(4f)                        // Slight warmth (temperature + tint)
+                   .GaussianSharpen(1.0f);         // Mild clarity
+
+                // Optional green tint overlay for that chromatic film vibe
+                var greenishOverlay = Color.FromRgba(160, 255, 200, 20); // very soft mint
+                ctx.Fill(greenishOverlay);
+            });
+
+            // Simulate fade (lift blacks & flatten whites) with white overlay
+            var fadeOverlay = Color.FromRgba(255, 255, 255, 20);
+            image.Mutate(ctx => ctx.Fill(fadeOverlay));
+
+            // Add vignette (dark edges)
+            image.Mutate(ctx => ctx.Vignette(Color.FromRgba(0, 0, 0, 90)));
+
+            // Optional soft grain
+            AddGrainNoise(image, 0.01f);
+        }
+
+        // FILTER PINTEREST 7
+        private static void ApplyPinterest7Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                ctx.Brightness(1.05f)             // exposure +0.5
+                   .Contrast(0.85f)               // contrast -2.0
+                   .Saturate(1.1f)                // slight saturation
+                   .Hue(10f)                      // warm tone (temp + tint)
+                                                  //.Highlights(1.2f)              // highlights +5.0 (approx.)
+                   .GaussianSharpen(0.8f);        // simulate clarity
+
+                // Yellow overlay for skin tone warmth
+                var overlay = Color.FromRgba(255, 240, 180, 30);
+                ctx.Fill(overlay);
+            });
+
+            image.Mutate(ctx => ctx.Fill(Color.FromRgba(255, 255, 255, 35))); // fade
+        }
+
+        // FILTER PINTEREST 8
+        private void ApplyPinterest8Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                ctx.Brightness(0.9f)              // exposure -1.3
+                   .Contrast(0.9f)                // slightly lower contrast
+                   .Saturate(1.24f)               // vibrant
+                   .Hue(-10f);                    // cooler tint
+
+                // Simulate split-tone (shadows green)
+                var greenShadow = Color.FromRgba(180, 255, 200, 25);
+                ctx.Fill(greenShadow);
+
+                // Simulate vignette
+                ctx.Vignette(Color.FromRgba(0, 0, 0, 80));
+            });
+
+            AddGrainNoise(image, 0.03f);
+        }
+
+        // FILTER PINTEREST 9
+        private void ApplyPinterest9Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                ctx.Brightness(0.95f)             // exposure -1
+                   .Contrast(1.1f)                // contrast +2
+                   .Saturate(1.0f)                // normal saturation
+                   .Hue(-3f);                     // blue-ish
+
+                // Brownish overlay to match M4's tone
+                var brownTone = Color.FromRgba(180, 140, 100, 35);
+                ctx.Fill(brownTone);
+
+                // Highlight enhancement
+                ctx.Lightness(1.1f);
+            });
+
+            AddGrainNoise(image, 0.02f);
+        }
+
+        // FILTER PINTEREST 10
+        private void ApplyPinterest10Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                ctx.Hue(320)
+                   .Saturate(1.8f)
+                   .Brightness(1.2f)
+                   .Contrast(0.9f);
+
+                var overlayColor = Color.FromRgba(255, 182, 193, 50); // light pink tint
+                ctx.Fill(overlayColor);
+            });
+
+            AddGrainNoise(image);
+        }
+
+        // FILTER PINTEREST 11
+        private void ApplyPinterest11Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                ctx.Hue(285) // purple/magenta shift
+                   .Brightness(1.1f)
+                   .Contrast(1.3f)
+                   .Saturate(1.2f);
+            });
+
+            AddGrainNoise(image, 0.025f);
+            // Optional: VHS line overlay or static texture (not in ImageSharp by default)
+        }
+
+        // FILTER PINTEREST 12
+        private void ApplyPinterest12Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                ctx.Brightness(1.1f)
+                   .Contrast(1.0f)
+                   .Saturate(0.9f)
+                   .Hue(35); // green-yellow cast
+            });
+
+            AddGrainNoise(image, 0.01f);
+        }
+
+        // FILTER PINTEREST 13
+        private void ApplyPinterest13Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                ctx.Saturate(0.7f)
+                   .Contrast(1.5f)
+                   .Brightness(0.95f)
+                   .Vignette(Color.FromRgba(0, 0, 0, 100));
+            });
+
+            AddGrainNoise(image, 0.02f);
+        }
+
+        // FILTER PINTEREST 14
+        private void ApplyPinterest14Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                ctx.Hue(330)
+                   .Saturate(0.75f)
+                   .Brightness(1.0f)
+                   .Contrast(0.9f);
+            });
+
+            AddGrainNoise(image, 0.012f);
+        }
+
+        // FILTER PINTEREST 15
+        private static void ApplyPinterest15Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                ctx.Hue(220)               // blue tone
+                   .Contrast(1.3f)
+                   .Brightness(0.95f)
+                   .Saturate(0.9f);
+
+                ctx.Vignette(Color.FromRgba(0, 0, 40, 100)); // dark edge
+            });            
+        }
+
+        // FILTER PINTEREST 16
+        private static void ApplyPinterest16Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                ctx.Hue(40)
+                   .Saturate(1.2f)
+                   .Brightness(1.1f)
+                   .Contrast(1.1f);
+            });
+
+            var overlay = Color.FromRgba(255, 223, 140, 50); // golden glow
+            image.Mutate(ctx => ctx.Fill(overlay));
+        }
+
+        // FILTER PINTEREST 17
+        private static void ApplyPinterest17Filter(Image<Rgba32> image)
+        {
+            image.Mutate(ctx =>
+            {
+                ctx.Grayscale()
+                   .Brightness(0.9f)
+                   .Contrast(1.5f);
+                
+                ctx.Vignette(Color.FromRgba(0, 0, 0, 120)); // heavy shadow
+            });           
+        }
+
     }
 }
