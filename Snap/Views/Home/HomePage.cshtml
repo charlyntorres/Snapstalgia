@@ -2,7 +2,124 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- Intro Section -->
+<section class="intro">
+    <div class="intro-inner">
+        <div class="intro-text">
+            <h1>Feel the Flashback <br>with Every Snap</h1>
+            <p><strong>Snapstalgia</strong> brings retro vibes to your snaps. Capture, customize, and share nostalgic photos instantly—no fancy gear needed.</p>
+            <button class="btn-1">Get Started <img src="@Url.Content("~/assets/camstart icon.png")" alt="camera icon" /> </button>
+        </div>
+        <div class="intro-image">
+            <img src="@Url.Content("~/assets/intro pic.png")" alt="photostrip" />
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="about">
+    <img src="@Url.Content("~/assets/booth.png")" alt="photobooth" />
+    <div class="about-text">
+        <h1 class="section-title">About</h1>
+        <p>Snapstalgia is a vintage-themed online photobooth that brings retro vibes to your snapshots. Choose a layout, apply classic filters and frames, and create timeless photo strips in seconds. It’s a fun, easy way to capture memories with a nostalgic twist.</p>
+        <button class="btn-1">Learn More</button>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works">
+    <h1>How it Works</h1>
+    <p>Create your perfect vintage photobooth strip in just five fun steps.</p>
+    <div class="steps">
+
+        <!-- Step 1 -->
+        <div class="step step-pink">
+            <span class="step-num">1</span>
+            <div class="step-icon">
+                <div class="icon-bg"><img src="@Url.Content("~/assets/layout icon.png")" alt="Choose Layout" /> </div>
+            </div>
+            <h3>Choose a Layout</h3>
+            <p>Pick your perfect strip style — 2, 3, or 4 fun poses.</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step step-teal">
+            <span class="step-num">2</span>
+            <div class="step-icon">
+                <div class="icon-bg"><img src="@Url.Content("~/assets/snap icon.png")" alt="Snap Photo" /> </div>
+            </div>
+            <h3>Snap a Photo</h3>
+            <p>Strike your best retro pose and let the camera do the magic.</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step step-pink">
+            <span class="step-num">3</span>
+            <div class="step-icon">
+                <div class="icon-bg"><img src="@Url.Content("~/assets/customize icon.png")" alt="Customize Photo" /> </div>
+            </div>
+            <h3>Customize Photo</h3>
+            <p>Add a vintage filter, frame it with retro colors, stick on playful stickers, and add a classic timestamp.</p>
+        </div>
+
+        <!-- Wrap to next line -->
+        <div class="step-break"></div>
+
+        <!-- Step 4 -->
+        <div class="step step-teal">
+            <span class="step-num">4</span>
+            <div class="step-icon">
+                <div class="icon-bg"><img src="@Url.Content("~/assets/download icon.png")" alt="Download" /> </div>
+            </div>
+            <h3>Download</h3>
+            <p>Get your photo strip instantly, ready to share or print.</p>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step step-pink">
+            <span class="step-num">5</span>
+            <div class="step-icon">
+                <div class="icon-bg"><img src="@Url.Content("~/assets/save it icon.png")" alt="Save" /> </div>
+            </div>
+            <h3>Save It!</h3>
+            <p>Post it to your Snapstalgia profile so you can relive the moment anytime.</p>
+        </div>
+
+    </div>
+</section>
+
+<!-- Layout Section -->
+<section class="layouts">
+    <div class="layouts-text">
+        <h1>Photo Strip Layouts</h1>
+        <p>Choose from three vertical strip options:</p>
+        <ul>
+            <li>2-Photo Strip</li>
+            <li>3-Photo Strip</li>
+            <li>4-Photo Strip</li>
+        </ul>
+        <p>Each layout is designed to give your photos a timeless, nostalgic feel.</p>
+        <button class="btn-2">Explore More</button>
+    </div>
+
+    <!-- photostrips layout to be updated -->
+    <div class="layouts-images">
+        <div class="layout-1">
+            <img src="@Url.Content("~/assets/layout display 1.png")" alt="2-photo" />
+        </div>
+        <div class="layout-2">
+            <img src="@Url.Content("~/assets/layout display 2.png")" alt="3-photo" />
+        </div>
+        <div class="layout-3">
+            <img src="@Url.Content("~/assets/layout display 3.png")" alt="4-photo" />
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta">
+    <h1>Ready to Snap Some Memories?</h1>
+    <p>Step into a world of nostalgic fun—capture your favorite moments with retro flair. It’s easy, fast, and always free to create your own vintage-style photo strips!</p>
+    <button class="btn-1">Try it now</button>
+</section>
+

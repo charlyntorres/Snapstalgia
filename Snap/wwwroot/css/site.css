@@ -1,22 +1,416 @@
+
+/* Global Format */
+
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap');
+
+@font-face {
+    font-family: 'TR Candice';
+    src: url('../assets/Fonts/TR Candice.TTF') format('truetype');
+    font-display: swap;
+}
+
+:root {
+    --font-heading: 'TR Candice', sans-serif;
+    --font-body: 'Bricolage Grotesque', sans-serif;
+    --color-primary: #BA5E62; /*dark pink*/
+    --color-secondary: #69AFAD; /*teal*/
+    --color-accent: #F9E5DA; /*semi-white*/
+    --color-light: #EFA5A6; /*light pink*/
+    --color-text: #1E1E1E; /*almost black*/
+    --color-button: #354E52; /*dark green*/
+    --shadow-default: 1px 1px 4px rgba(0, 0, 0, 0.25);
+    --radius-10: 10px;
+    --radius-30: 30px;
+    --radius-40: 40px;
+    --radius-50: 50px;
+}
+
+/* Base Styles */
+.layout-wrapper {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
 html {
-  font-size: 14px;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+    min-width: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: var(--font-body);
+    background-color: var(--color-accent);
+    color: var(--color-text);
+    margin: 0;
+    padding: 0;
+    margin-bottom: 60px;
 }
+
+/* Typography */
+h1,
+h2,
+.key-features h2,
+.faq h2 {
+    font-family: var(--font-heading);
+    color: var(--color-primary);
+    text-shadow: var(--shadow-default);
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 50px;
+}
+
+h2 {
+    font-size: 45px;
+}
+
+p {
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.8;
+    color: var(--color-text);
+    text-align: justify;
+}
+
+/* Flex helpers */
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-space-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Buttons from components */
+.btn-1 {
+    background-color: var(--color-secondary);
+    color: var(--color-accent);
+    font-size: 18px;
+    font-weight: 700;
+    padding: 10px 30px;
+    border-radius: var(--radius-50);
+    display: inline-flex;
+    align-items: center;
+    gap: 13px;
+    transition: all 0.3s ease;
+    font-family: var(--font-body);
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    .btn-1 img {
+        width: 26px;
+        height: 26px;
+    }
+
+    .btn-1:hover {
+        background-color: var(--color-button);
+        box-shadow: var(--shadow-default);
+    }
+
+.btn-2 {
+    background-color: var(--color-primary);
+    color: var(--color-accent);
+    font-size: 16px;
+    font-weight: 800;
+    padding: 12px 39px;
+    border-radius: var(--radius-50);
+    display: inline-flex;
+    align-items: center;
+    gap: 13px;
+    transition: all 0.3s ease;
+    font-family: var(--font-body);
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    .btn-2:hover {
+        background-color: var(--color-light);
+        color: var(--color-button);
+        box-shadow: var(--shadow-default);
+    }
+
+/*-------------------------------------------------------------------------*/
+
+/* Homepage Interface */
+
+/* intro Section */
+.intro {
+    background-color: var(--color-primary);
+    display: flex;
+    height: 413px;
+    overflow: visible;
+}
+
+.intro-inner {
+    margin: 0 auto;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: space-between;
+    gap: 145px;
+}
+
+.intro-text h1 {
+    margin-top: 110px;
+    color: var(--color-accent);
+    font-size: 75px;
+    margin-bottom: 30px;
+    text-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.intro-text p {
+    font-size: 22px;
+    color: var(--color-accent);
+    text-align: center;
+    line-height: 32px;
+    max-width: 700px;
+    font-weight: 600;
+    margin-bottom: 40px;
+}
+
+    .intro-text p strong {
+        font-weight: 800;
+    }
+
+.intro-text .btn-1 {
+    height: 55px;
+}
+
+.intro-image img {
+    margin-top: 235px;
+    width: 641px;
+    height: 641px;
+}
+
+/* About */
+.about {
+    margin-top: 310px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 61px;
+}
+
+    .about h1 {
+        text-align: justify;
+    }
+
+    .about img {
+        width: 700px;
+        height: 467px;
+    }
+
+.about-text p {
+    text-align: justify;
+    max-width: 670px;
+    margin-bottom: 30px;
+}
+
+/* How It Works */
+.how-it-works {
+    padding-top: 140px;
+    text-align: center;
+}
+
+    .how-it-works p {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+/* Container for all steps */
+.steps {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 50px;
+    row-gap: 30px;
+    font-family: var(--font-body);
+}
+
+/* Base style for each step box */
+.step {
+    width: 290px;
+    height: 290px;
+    padding-top: 55px;
+    border-radius: var(--radius-40);
+    color: var(--color-accent);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Color modifiers */
+.step-pink {
+    background-color: var(--color-primary);
+}
+
+    .step-pink:hover {
+        box-shadow: 0px 0px 25px 3px var(--color-primary);
+        transition: all 0.3s ease;
+    }
+
+.step-teal {
+    background-color: var(--color-secondary);
+}
+
+    .step-teal:hover {
+        box-shadow: 0px 0px 25px 3px var(--color-secondary);
+        transition: all 0.3s ease;
+    }
+
+.step-break {
+    flex-basis: 100%;
+}
+
+/* Icon container with circular background */
+.step-icon .icon-bg {
+    width: 80px;
+    height: 80px;
+    background-color: var(--color-accent);
+    border-radius: var(--radius-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Icon image styling */
+.step-icon img {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+}
+
+/* Step heading */
+.step h3 {
+    font-weight: 700;
+    font-size: 22px;
+    margin-top: 17px;
+    margin-bottom: 10px;
+}
+
+/* Step description */
+.step p {
+    margin-top: 0px;
+    font-size: 16px;
+    line-height: 20px;
+    max-width: 224px;
+    text-align: justify;
+    color: var(--color-accent);
+}
+
+/* Step number badge */
+.step-num {
+    position: absolute;
+    top: 22px;
+    left: 33px;
+    font-size: 40px;
+    font-weight: 400;
+    font-family: var(--font-heading);
+    color: var(--color-accent);
+}
+
+/* Layouts container */
+.layouts {
+    margin: 140px auto 0 auto;
+    background-color: var(--color-secondary);
+    width: 1444px;
+    height: 663px;
+    border-radius: var(--radius-30);
+    padding: 60px 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+
+/* Layout text styles */
+.layouts-text {
+    max-width: 50%;
+}
+
+    .layouts-text h1,
+    .layouts-text p,
+    .layouts-text ul {
+        color: var(--color-accent);
+        gap: 15px;
+    }
+
+    .layouts-text ul {
+        font-size: 18px;
+        line-height: 30px;
+    }
+
+    .layouts-text p {
+        font-size: 18px;
+        line-height: 32px;
+        max-width: 370px;
+    }
+
+    .layouts-text .btn-2 {
+        margin-top: 20px;
+    }
+
+/* Layout images container */
+.layouts-images {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+}
+
+.layout-1 img {
+    height: 290px;
+    width: 180px;
+}
+
+.layout-2 img {
+    height: 417px;
+    width: 180px;
+}
+
+.layout-3 img {
+    height: 543px;
+    width: 180px;
+}
+
+/* CTA */
+.cta {
+    text-align: center;
+    padding: 140px;
+}
+
+    .cta p {
+        text-align: center;
+        margin: 0 auto;
+        padding-bottom: 40px;
+        max-width: 719px;
+    }
