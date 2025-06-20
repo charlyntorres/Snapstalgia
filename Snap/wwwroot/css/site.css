@@ -414,3 +414,87 @@ p {
         padding-bottom: 40px;
         max-width: 719px;
     }
+
+/*-------------------------------------------------------------------------*/
+
+/* Choose Layout Interface */
+
+/* Main Choose Layout Container */
+.chooselayout {
+    margin: 40px auto 120px auto;
+    background-color: var(--color-light);
+    border-radius: 20px;
+    width: 1100px;
+    padding: 40px 50px 60px 50px;
+    align-items: center;
+}
+
+/* cl text styles */
+.cl-text h2 {
+    color: var(--color-accent);
+    text-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25)
+}
+
+.cl-text p {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+    .cl-text p strong {
+        font-weight: 600;
+    }
+
+/* cl images container */
+.cl-images {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+}
+
+.cl-a img,
+.cl-b img,
+.cl-c img {
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .cl-a img:hover,
+    .cl-b img:hover,
+    .cl-c img:hover {
+        box-shadow: 0px 0px 20px 3px rgba(30, 30, 30, 0.50);
+    }
+
+
+.cl-a img {
+    height: 242px;
+    width: 150px;
+}
+
+.cl-b img {
+    height: 347px;
+    width: 150px;
+}
+
+.cl-c img {
+    height: 445px;
+    width: 150px;
+}
+
+.layout-label,
+.pose-label {
+    font-family: var(--font-body);
+    color: var(--color-text);
+    text-align: center;
+}
+
+.layout-label {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.pose-label {
+    font-weight: 400;
+    font-size: 14px;
+}
