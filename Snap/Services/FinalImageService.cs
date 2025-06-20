@@ -124,7 +124,6 @@ namespace Snap.Services
             // Photo grid
             for (int i = 0; i < images.Count; i++)
             {
-                //int row = i;
                 int x = leftMargin;
                 int y = topMargin + i * (photoHeight + spacing);               
 
@@ -172,7 +171,6 @@ namespace Snap.Services
             var filePath = System.IO.Path.Combine(FinalFolder, fileName);
             await finalImage.SaveAsJpegAsync(filePath);
 
-            // Log or return dimensions here
             Console.WriteLine($"Final image size: {finalWidth}x{finalHeight}px");
 
             return $"/images/final/{fileName}";
@@ -204,7 +202,6 @@ namespace Snap.Services
                     {
                         var pixel = row[x];
 
-                        // Generate a small random brightness adjustment
                         float noise = (float)(random.NextDouble() * 2 - 1) * intensity;
 
                         pixel.R = ClampByte(pixel.R + (int)(noise * 255));
@@ -242,18 +239,15 @@ namespace Snap.Services
         {
             image.Mutate(ctx =>
             {
-                // Retro
                 ctx.Contrast(1.3f)
                    .Saturate(1.5f)
                    .Brightness(1.1f)
                    .Hue(15);
 
-                // Color Overlay
                 var overlayColor = Color.FromRgba(255, 204, 153, 50);
                 ctx.Fill(overlayColor);
             });
 
-            // Grain
             AddGrainNoise(image, intensity: 0.03f);
         }
 
@@ -262,13 +256,12 @@ namespace Snap.Services
         {
             image.Mutate(ctx =>
             {
-                ctx.Brightness(1.22f)            // brighten midtones
-                   .Contrast(0.72f)              // flat contrast
-                   .Saturate(1.09f)              // soft color pop
-                   .GaussianSharpen(1.1f);       // light sharpness
+                ctx.Brightness(1.22f)            
+                   .Contrast(0.72f)              
+                   .Saturate(1.09f)              
+                   .GaussianSharpen(1.1f);     
             });
 
-            // Optional: Grain or slight overlay for film softness
             AddGrainNoise(image, 0.012f);
         }
 
@@ -302,8 +295,8 @@ namespace Snap.Services
                     new PointF(0, 0),
                     new PointF(0, image.Height),
                     GradientRepetitionMode.None,
-                    new ColorStop(0f, Color.FromRgba(255, 183, 76, 70)), // orange top
-                    new ColorStop(1f, Color.FromRgba(255, 94, 151, 70))  // pink bottom
+                    new ColorStop(0f, Color.FromRgba(255, 183, 76, 70)),
+                    new ColorStop(1f, Color.FromRgba(255, 94, 151, 70))  
                 );
 
                 ctx.Fill(gradient);
@@ -315,25 +308,21 @@ namespace Snap.Services
         {
             image.Mutate(ctx =>
             {
-                ctx.Brightness(1.05f)              // Exposure +0.5
-                   .Contrast(1.25f)                // Punch up contrast
-                   .Saturate(1.15f)                // Slight saturation boost
-                   .Hue(4f)                        // Slight warmth (temperature + tint)
-                   .GaussianSharpen(1.0f);         // Mild clarity
+                ctx.Brightness(1.05f)              
+                   .Contrast(1.25f)               
+                   .Saturate(1.15f)                
+                   .Hue(4f)                        
+                   .GaussianSharpen(1.0f);         
 
-                // Optional green tint overlay for that chromatic film vibe
-                var greenishOverlay = Color.FromRgba(160, 255, 200, 20); // very soft mint
+                var greenishOverlay = Color.FromRgba(160, 255, 200, 20); 
                 ctx.Fill(greenishOverlay);
             });
 
-            // Simulate fade (lift blacks & flatten whites) with white overlay
             var fadeOverlay = Color.FromRgba(255, 255, 255, 20);
             image.Mutate(ctx => ctx.Fill(fadeOverlay));
 
-            // Add vignette (dark edges)
             image.Mutate(ctx => ctx.Vignette(Color.FromRgba(0, 0, 0, 90)));
 
-            // Optional soft grain
             AddGrainNoise(image, 0.01f);
         }
 
@@ -342,19 +331,17 @@ namespace Snap.Services
         {
             image.Mutate(ctx =>
             {
-                ctx.Brightness(1.05f)             // exposure +0.5
-                   .Contrast(0.85f)               // contrast -2.0
-                   .Saturate(1.1f)                // slight saturation
-                   .Hue(10f)                      // warm tone (temp + tint)
-                                                  //.Highlights(1.2f)              // highlights +5.0 (approx.)
-                   .GaussianSharpen(0.8f);        // simulate clarity
+                ctx.Brightness(1.05f)             
+                   .Contrast(0.85f)              
+                   .Saturate(1.1f)               
+                   .Hue(10f)                      
+                   .GaussianSharpen(0.8f);        
 
-                // Yellow overlay for skin tone warmth
                 var overlay = Color.FromRgba(255, 240, 180, 30);
                 ctx.Fill(overlay);
             });
 
-            image.Mutate(ctx => ctx.Fill(Color.FromRgba(255, 255, 255, 35))); // fade
+            image.Mutate(ctx => ctx.Fill(Color.FromRgba(255, 255, 255, 35))); 
         }
 
         // FILTER PINTEREST 8
@@ -362,16 +349,14 @@ namespace Snap.Services
         {
             image.Mutate(ctx =>
             {
-                ctx.Brightness(0.9f)              // exposure -1.3
-                   .Contrast(0.9f)                // slightly lower contrast
-                   .Saturate(1.24f)               // vibrant
-                   .Hue(-10f);                    // cooler tint
+                ctx.Brightness(0.9f)              
+                   .Contrast(0.9f)                
+                   .Saturate(1.24f)               
+                   .Hue(-10f);                    
 
-                // Simulate split-tone (shadows green)
                 var greenShadow = Color.FromRgba(180, 255, 200, 25);
                 ctx.Fill(greenShadow);
 
-                // Simulate vignette
                 ctx.Vignette(Color.FromRgba(0, 0, 0, 80));
             });
 
@@ -383,16 +368,14 @@ namespace Snap.Services
         {
             image.Mutate(ctx =>
             {
-                ctx.Brightness(0.95f)             // exposure -1
-                   .Contrast(1.1f)                // contrast +2
-                   .Saturate(1.0f)                // normal saturation
-                   .Hue(-3f);                     // blue-ish
-
-                // Brownish overlay to match M4's tone
+                ctx.Brightness(0.95f)             
+                   .Contrast(1.1f)                
+                   .Saturate(1.0f)                
+                   .Hue(-3f);                     
+                
                 var brownTone = Color.FromRgba(180, 140, 100, 35);
                 ctx.Fill(brownTone);
-
-                // Highlight enhancement
+                
                 ctx.Lightness(1.1f);
             });
 
@@ -409,7 +392,7 @@ namespace Snap.Services
                    .Brightness(1.2f)
                    .Contrast(0.9f);
 
-                var overlayColor = Color.FromRgba(255, 182, 193, 50); // light pink tint
+                var overlayColor = Color.FromRgba(255, 182, 193, 50); 
                 ctx.Fill(overlayColor);
             });
 
@@ -421,14 +404,13 @@ namespace Snap.Services
         {
             image.Mutate(ctx =>
             {
-                ctx.Hue(285) // purple/magenta shift
+                ctx.Hue(285) 
                    .Brightness(1.1f)
                    .Contrast(1.3f)
                    .Saturate(1.2f);
             });
 
             AddGrainNoise(image, 0.025f);
-            // Optional: VHS line overlay or static texture (not in ImageSharp by default)
         }
 
         // FILTER PINTEREST 12
@@ -439,7 +421,7 @@ namespace Snap.Services
                 ctx.Brightness(1.1f)
                    .Contrast(1.0f)
                    .Saturate(0.9f)
-                   .Hue(35); // green-yellow cast
+                   .Hue(35); 
             });
 
             AddGrainNoise(image, 0.01f);
@@ -478,12 +460,12 @@ namespace Snap.Services
         {
             image.Mutate(ctx =>
             {
-                ctx.Hue(220)               // blue tone
+                ctx.Hue(220)              
                    .Contrast(1.3f)
                    .Brightness(0.95f)
                    .Saturate(0.9f);
 
-                ctx.Vignette(Color.FromRgba(0, 0, 40, 100)); // dark edge
+                ctx.Vignette(Color.FromRgba(0, 0, 40, 100));
             });            
         }
 
@@ -498,7 +480,7 @@ namespace Snap.Services
                    .Contrast(1.1f);
             });
 
-            var overlay = Color.FromRgba(255, 223, 140, 50); // golden glow
+            var overlay = Color.FromRgba(255, 223, 140, 50); 
             image.Mutate(ctx => ctx.Fill(overlay));
         }
 
@@ -511,7 +493,7 @@ namespace Snap.Services
                    .Brightness(0.9f)
                    .Contrast(1.5f);
                 
-                ctx.Vignette(Color.FromRgba(0, 0, 0, 120)); // heavy shadow
+                ctx.Vignette(Color.FromRgba(0, 0, 0, 120)); 
             });           
         }
 
