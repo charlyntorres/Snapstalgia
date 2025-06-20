@@ -21,7 +21,6 @@ namespace Snap.Services
 
         public async Task<string> GenerateFinalImageAsync(FinalImageRequest request)
         {
-            // Ensure output directory exists
             if (!Directory.Exists(FinalFolder))
                 Directory.CreateDirectory(FinalFolder);
 
@@ -44,43 +43,50 @@ namespace Snap.Services
                 .Select(f => Image.Load<Rgba32>(f))
                 .ToList();
 
-            int imgWidth = images[0].Width;
-            int imgHeight = images[0].Height;
+            int photoWidth = images[0].Width;
+            int photoHeight = images[0].Height;
+            int spacing = 13;
+            int topMargin = 15;
+            int leftMargin = 12;
 
-            int finalWidth = cols * imgWidth;
-            int finalHeight = rows * imgHeight;
+            var (finalWidth, finalHeight) = LayoutPresets.GetFinalImageSize(request.LayoutType);
+            
+            var frameColor = !string.IsNullOrWhiteSpace(request.FrameColor)
+                ? Color.ParseHex(request.FrameColor)
+                : Color.White;
 
             using var finalImage = new Image<Rgba32>(finalWidth, finalHeight);
+            finalImage.Mutate(ctx => ctx.Clear(frameColor));
 
-            // Compose final image grid
+            // Photo grid
             for (int i = 0; i < images.Count; i++)
             {
-                int x = (i % cols) * imgWidth;
-                int y = (i / cols) * imgHeight;
+                //int row = i;
+                int x = leftMargin;
+                int y = topMargin + i * (photoHeight + spacing);                
 
                 images[i].Mutate(ctx => ctx.ApplyFilter(request.FilterId));
                 finalImage.Mutate(ctx => ctx.DrawImage(images[i], new Point(x, y), 1f));
-
-                images[i].Dispose(); // Free memory
+                images[i].Dispose();
             }
 
             // Frame
-            if (!string.IsNullOrWhiteSpace(request.FrameColor))
-            {
-                try
-                {
-                    var frameColor = Color.ParseHex(request.FrameColor);
-                    int thickness = 10;
-                    finalImage.Mutate(ctx =>
-                    {
-                        ctx.Draw(frameColor, thickness, new RectangularPolygon(0, 0, finalWidth, finalHeight));
-                    });
-                }
-                catch (Exception ex)
-                {
-                    throw new ArgumentException($"Invalid frame color string: '{request.FrameColor}'.", ex);
-                }
-            }
+            //if (!string.IsNullOrWhiteSpace(request.FrameColor))
+            //{
+            //    try
+            //    {
+            //        var frameColor = Color.ParseHex(request.FrameColor);
+            //        int thickness = 50;
+            //        finalImage.Mutate(ctx =>
+            //        {
+            //            ctx.Draw(frameColor, thickness, new RectangularPolygon(0, 0, finalWidth, finalHeight));
+            //        });
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        throw new ArgumentException($"Invalid frame color string: '{request.FrameColor}'.", ex);
+            //    }
+            //}
 
             // Sticker
             if (request.StickerId.HasValue)
@@ -100,34 +106,42 @@ namespace Snap.Services
             if (request.IncludeTimestamp)
             {
                 var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                var font = SystemFonts.CreateFont("Bricolage Grotesque", 18);
+                var fontPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Assets", "Fonts", "BricolageGrotesque-Regular.ttf");
+                var font = TryLoadFont(fontPath, 18);
 
-                var textOptions = new RichTextOptions(font)
+                var textSize = TextMeasurer.MeasureSize(timestamp, new TextOptions(font));
+                var timestampX = (finalWidth - textSize.Width) / 2;
+                var timestampY = finalHeight - 28;
+
+                finalImage.Mutate(ctx =>
                 {
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    VerticalAlignment = VerticalAlignment.Bottom,
-                    Origin = new PointF(finalWidth - 10, finalHeight - 10)
-                };
-
-                finalImage.Mutate(ctx => ctx.DrawText(textOptions, timestamp, Color.White));
+                    ctx.DrawText(
+                        timestamp,
+                        font,
+                        Color.Black,
+                        new PointF(timestampX, timestampY));
+                });
             }
 
-            // Save final image
+            // Save
             var fileName = $"{request.SessionId}_final_{DateTime.Now:yyyyMMdd_HHmmss}.jpg";
             var filePath = System.IO.Path.Combine(FinalFolder, fileName);
             await finalImage.SaveAsJpegAsync(filePath);
 
-            // Clean up session folder
-            try
-            {
-                Directory.Delete(sessionFolder, recursive: true);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Warning] Could not clean temp folder: {ex.Message}");
-            }
+            // Log or return dimensions here
+            Console.WriteLine($"Final image size: {finalWidth}x{finalHeight}px");
 
             return $"/images/final/{fileName}";
+        }
+
+        private static Font TryLoadFont(string fontPath, float size)
+        {
+            if (!File.Exists(fontPath))
+                throw new FileNotFoundException($"Font file not found at path: {fontPath}");
+
+            var fontCollection = new FontCollection();
+            var fontFamily = fontCollection.Add(fontPath);
+            return fontFamily.CreateFont(size);
         }
     }
 }
