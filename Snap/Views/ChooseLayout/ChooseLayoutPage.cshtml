@@ -2,4 +2,29 @@
     ViewData["Title"] = "Choose Layout";
 }
 
+<!-- Main Layout Selection Box -->
+<section class="chooselayout">
+    <div class="cl-text">
+        <h2>Choose your layout</h2>
+        <p><strong>Note!</strong> You’ll only have 3 seconds between each snap</p>
+    </div>
 
+    <!-- Layout Options -->
+    <div class="cl-images">
+        <div class="cl-a">
+            <img src="@Url.Content("~/assets/cl-a.png")" alt="2-photo" />
+            <div class="layout-label">Layout A</div>
+            <div class="pose-label">3 Pose</div>
+        </div>
+        <div class="cl-b">
+            <img src="@Url.Content("~/assets/cl-b.png")" alt="3-photo" />
+            <div class="layout-label">Layout B</div>
+            <div class="pose-label">3 Pose</div>
+        </div>
+        <div class="cl-c">
+            <img src="@Url.Content("~/assets/cl-c.png")" alt="4-photo" />
+            <div class="layout-label">Layout C</div>
+            <div class="pose-label">4 Pose</div>
+        </div>
+    </div>
+</section>
