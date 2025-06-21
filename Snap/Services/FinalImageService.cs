@@ -12,7 +12,6 @@ using SixLabors.ImageSharp.Drawing;
 using Snap.Helpers;
 using SixLabors.ImageSharp.Processing.Processors.Filters;
 using SixLabors.ImageSharp.Processing.Processors;
-using System;
 
 namespace Snap.Services
 {
@@ -31,7 +30,7 @@ namespace Snap.Services
             if (!Directory.Exists(sessionFolder))
                 throw new Exception("Session images folder not found.");
 
-            var imageFiles = Directory.GetFiles(sessionFolder, "*.jpg")
+            var imageFiles = Directory.GetFiles(sessionFolder, "*.png")
                 .OrderBy(f => f)
                 .ToList();
 
@@ -41,6 +40,7 @@ namespace Snap.Services
             if (imageFiles.Count < expectedCount)
                 throw new Exception($"Not enough images for layout. Expected {expectedCount}, found {imageFiles.Count}.");
 
+            // Filter
             var images = new List<Image<Rgba32>>();
             foreach (var file in imageFiles.Take(expectedCount))
             {
@@ -114,64 +114,118 @@ namespace Snap.Services
 
             var (finalWidth, finalHeight) = LayoutPresets.GetFinalImageSize(request.LayoutType);
 
-            var frameColor = !string.IsNullOrWhiteSpace(request.FrameColor)
-                ? Color.ParseHex(request.FrameColor)
-                : Color.White;
+            // Frame color
+            var allowedColors = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "BA5E62",   // Muted rose
+                "EFA5A6",   // Light pink
+                "F9E5DA",   // Soft peach
+                "69AFAD",   // Cool mint
+                "354E52",   // Dark teal
+                "1E1E1E",   // Classic black
+                "97C78E",   // Light green
+                "CC6B49",   // Burnt orange
+                "D2A24C",   // Warm gold
+                "ECE6C2",   // Pale beige
+                "6F5643",   // Coffee brown
+                "C2DFF3"    // Baby brown
+            };
+
+            var inputColor = request.FrameColor?.Trim().ToUpperInvariant();
+            var colorHex = !string.IsNullOrEmpty(inputColor) && allowedColors.Contains(inputColor)
+                ? inputColor
+                : "BA5E62";
+            
+            var frameColor = Color.ParseHex("#" + colorHex);
+
+            Color textColor;
+            if (GetLuminance(frameColor) < 0.5)
+            {
+                textColor = Color.ParseHex("F9E5DA");
+            }
+            else
+            {
+                textColor = Color.ParseHex("1E1E1E");
+            }
 
             using var finalImage = new Image<Rgba32>(finalWidth, finalHeight);
             finalImage.Mutate(ctx => ctx.Clear(frameColor));
+
+            // Stickers
+            string behindPath = null;
+            string frontPath = null;
+
+            // Behind overlay
+            if (request.StickerId.HasValue && StickerPresets.TryGetStickerPaths(request.LayoutType, request.StickerId, out behindPath, out frontPath))
+            {
+                if (!string.IsNullOrWhiteSpace(behindPath))
+                {
+                    var behindFullPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", behindPath);
+                    if (File.Exists(behindFullPath))
+                    {
+                        using var behindOverlay = Image.Load<Rgba32>(behindFullPath);
+                        behindOverlay.Mutate(x => x.Resize(finalWidth, finalHeight));
+                        finalImage.Mutate(ctx => ctx.DrawImage(behindOverlay, 1f));
+                    }
+                }
+            }
 
             // Photo grid
             for (int i = 0; i < images.Count; i++)
             {
                 int x = leftMargin;
-                int y = topMargin + i * (photoHeight + spacing);               
+                int y = topMargin + i * (photoHeight + spacing);
 
                 finalImage.Mutate(ctx => ctx.DrawImage(images[i], new Point(x, y), 1f));
                 images[i].Dispose();
             }
 
-            // Sticker
-            if (request.StickerId.HasValue)
+            // Front overlay
+            if (!string.IsNullOrWhiteSpace(frontPath))
             {
-                string stickerPath = System.IO.Path.Combine(StickerFolder, $"{request.StickerId.Value}.png");
-                if (File.Exists(stickerPath))
+                var frontFullPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", frontPath);
+                if (File.Exists(frontFullPath))
                 {
-                    using var stickerImage = Image.Load<Rgba32>(stickerPath);
-                    int posX = finalWidth - stickerImage.Width - 10;
-                    int posY = finalHeight - stickerImage.Height - 10;
-
-                    finalImage.Mutate(ctx => ctx.DrawImage(stickerImage, new Point(posX, posY), 1f));
+                    using var frontOverlay = Image.Load<Rgba32>(frontFullPath);
+                    frontOverlay.Mutate(x => x.Resize(finalWidth, finalHeight));
+                    finalImage.Mutate(ctx => ctx.DrawImage(frontOverlay, 1f));
                 }
             }
+
+            // Brand label
+            var brand = "SnapStalgia";
+            var brandFontPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Assets", "Fonts", "TR Candice.TTF");
+            var brandFontLabel = TryLoadFont(brandFontPath, 16);
+            var brandSize = TextMeasurer.MeasureSize(brand, new TextOptions(brandFontLabel));
+            var brandX = (finalWidth - brandSize.Width) / 2;
+            var brandY = finalHeight - 43;
+
+            finalImage.Mutate(ctx =>
+            {
+                ctx.DrawText(brand, brandFontLabel, textColor, new PointF(brandX, brandY));
+            });           
 
             // Timestamp
             if (request.IncludeTimestamp)
             {
                 var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                var fontPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Assets", "Fonts", "BricolageGrotesque-Regular.ttf");
-                var font = TryLoadFont(fontPath, 18);
+                var timeFontPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Assets", "Fonts", "BricolageGrotesque-Regular.ttf");
+                var font = TryLoadFont(timeFontPath, 8);
 
                 var textSize = TextMeasurer.MeasureSize(timestamp, new TextOptions(font));
                 var timestampX = (finalWidth - textSize.Width) / 2;
-                var timestampY = finalHeight - 28;
+                var timestampY = finalHeight - 23;
 
                 finalImage.Mutate(ctx =>
                 {
-                    ctx.DrawText(
-                        timestamp,
-                        font,
-                        Color.Black,
-                        new PointF(timestampX, timestampY));
+                    ctx.DrawText(timestamp, font, textColor, new PointF(timestampX, timestampY));
                 });
             }
 
             // Save
-            var fileName = $"{request.SessionId}_final_{DateTime.Now:yyyyMMdd_HHmmss}.jpg";
+            var fileName = $"{request.SessionId}_final_{DateTime.Now:yyyyMMdd_HHmmss}.png";
             var filePath = System.IO.Path.Combine(FinalFolder, fileName);
-            await finalImage.SaveAsJpegAsync(filePath);
-
-            Console.WriteLine($"Final image size: {finalWidth}x{finalHeight}px");
+            await finalImage.SaveAsPngAsync(filePath);
 
             return $"/images/final/{fileName}";
         }
@@ -184,40 +238,6 @@ namespace Snap.Services
             var fontCollection = new FontCollection();
             var fontFamily = fontCollection.Add(fontPath);
             return fontFamily.CreateFont(size);
-        }
-
-        // GRAIN REMOVE IF PANGET
-        private void AddGrainNoise(Image<Rgba32> image, float intensity = 0.05f)
-        {
-            var random = new Random();
-            int width = image.Width;
-            int height = image.Height;
-
-            image.ProcessPixelRows(accessor =>
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    var row = accessor.GetRowSpan(y);
-                    for (int x = 0; x < width; x++)
-                    {
-                        var pixel = row[x];
-
-                        float noise = (float)(random.NextDouble() * 2 - 1) * intensity;
-
-                        pixel.R = ClampByte(pixel.R + (int)(noise * 255));
-                        pixel.G = ClampByte(pixel.G + (int)(noise * 255));
-                        pixel.B = ClampByte(pixel.B + (int)(noise * 255));
-
-                        row[x] = pixel;
-                    }
-                }
-            });
-        }
-
-        // PART OF GRAIN, REMOVE IF PANGET
-        private byte ClampByte(int value)
-        {
-            return (byte)Math.Clamp(value, 0, 255);
         }
 
         // FITLER PINTEREST 1
@@ -497,5 +517,47 @@ namespace Snap.Services
             });           
         }
 
+        // Grain Helper 1
+        private void AddGrainNoise(Image<Rgba32> image, float intensity = 0.05f)
+        {
+            var random = new Random();
+            int width = image.Width;
+            int height = image.Height;
+
+            image.ProcessPixelRows(accessor =>
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    var row = accessor.GetRowSpan(y);
+                    for (int x = 0; x < width; x++)
+                    {
+                        var pixel = row[x];
+
+                        float noise = (float)(random.NextDouble() * 2 - 1) * intensity;
+
+                        pixel.R = ClampByte(pixel.R + (int)(noise * 255));
+                        pixel.G = ClampByte(pixel.G + (int)(noise * 255));
+                        pixel.B = ClampByte(pixel.B + (int)(noise * 255));
+
+                        row[x] = pixel;
+                    }
+                }
+            });
+        }
+
+        // Grain Helper 2
+        private byte ClampByte(int value)
+        {
+            return (byte)Math.Clamp(value, 0, 255);
+        }
+
+        // Text Color Helper
+        private static double GetLuminance(Color color)
+        {
+            var rgba = color.ToPixel<Rgba32>();
+            return 0.2126 * rgba.R / 255
+                + 0.7152 * rgba.G / 255
+                + 0.0722 * rgba.B / 255;
+        }
     }
 }
