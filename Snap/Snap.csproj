@@ -49,6 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\Assets\Stickers\1x2\" />
     <Folder Include="wwwroot\images\final\" />
     <Folder Include="wwwroot\images\temp\" />
     <Folder Include="wwwroot\stickers\" />
