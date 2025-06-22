@@ -111,11 +111,10 @@ namespace Snap.Services
             // Photo grid
             for (int i = 0; i < images.Count; i++)
             {
-                //int row = i;
                 int x = leftMargin;
                 int y = topMargin + i * (photoHeight + spacing);
 
-                //images[i].Mutate(ctx => ctx.ApplyFilter(request.FilterId));
+                // Apply filter
                 images[i].ApplyFilter((int)request.FilterId);
 
                 finalImage.Mutate(ctx => ctx.DrawImage(images[i], new Point(x, y), 1f));

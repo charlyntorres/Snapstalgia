@@ -123,7 +123,6 @@ namespace Snap.Controllers
         {
             var finalFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "final");
 
-            // Find latest matching final image for this session
             var file = Directory.GetFiles(finalFolder, $"{sessionId}_*.png")
                 .OrderByDescending(f => new FileInfo(f).CreationTime)
                 .FirstOrDefault();
@@ -134,12 +133,12 @@ namespace Snap.Controllers
             var provider = new FileExtensionContentTypeProvider();
             if (!provider.TryGetContentType(file, out var contentType))
             {
-                contentType = "application/octet-stream"; // Default content type
+                contentType = "application/octet-stream"; 
             }
 
             var bytes = System.IO.File.ReadAllBytes(file);
             var fileName = Path.GetFileName(file);
-            return File(bytes, contentType, fileName); // Forces download in browser
+            return File(bytes, contentType, fileName); 
         }
     }
 }
