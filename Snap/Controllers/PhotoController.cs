@@ -41,13 +41,13 @@ namespace Snap.Controllers
                     Directory.CreateDirectory(tempSessionFolder);                   
 
                 var timestamp = DateTime.Now;
-                var fileName = $"{request.SessionId}_{request.Sequence}_{timestamp:yyyyMMdd_HHmmss}.jpg";
+                var fileName = $"{request.SessionId}_{request.Sequence}_{timestamp:yyyyMMdd_HHmmss}.png";
                 var filePath = Path.Combine(tempSessionFolder, fileName);
 
                 var (targetWidth, targetHeight) = LayoutPresets.GetPhotoSize(request.LayoutType);
                 using var image = Image.Load<Rgba32>(request.File.OpenReadStream());
                 image.Mutate(ctx => ctx.Resize(250, 180));
-                await image.SaveAsJpegAsync(filePath);
+                await image.SaveAsPngAsync(filePath);
 
                 var (width, height) = LayoutPresets.GetPhotoSize(request.LayoutType);
                 var photo = new CapturedPhoto
@@ -93,7 +93,7 @@ namespace Snap.Controllers
                 if (!Directory.Exists(tempSessionFolder))
                     return BadRequest("No photos uploaded for this session.");
 
-                var images = Directory.GetFiles(tempSessionFolder, "*.jpg");
+                var images = Directory.GetFiles(tempSessionFolder, "*.png");
                 if (images.Length < expectedCount)
                     return BadRequest($"Expected {expectedCount} photos but found {images.Length}. Please upload all photos before compiling.");
 
@@ -124,7 +124,7 @@ namespace Snap.Controllers
             var finalFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "final");
 
             // Find latest matching final image for this session
-            var file = Directory.GetFiles(finalFolder, $"{sessionId}_*.jpg")
+            var file = Directory.GetFiles(finalFolder, $"{sessionId}_*.png")
                 .OrderByDescending(f => new FileInfo(f).CreationTime)
                 .FirstOrDefault();
 
