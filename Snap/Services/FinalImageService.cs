@@ -41,36 +41,6 @@ namespace Snap.Services
             if (imageFiles.Count < expectedCount)
                 throw new Exception($"Not enough images for layout. Expected {expectedCount}, found {imageFiles.Count}.");
 
-            // Filter
-            //var images = new List<Image<Rgba32>>();
-            //foreach (var file in imageFiles.Take(expectedCount))
-            //{
-            //    var image = Image.Load<Rgba32>(file);
-
-            //    switch (request.FilterId)
-            //    {
-            //        case 1:
-            //            ApplyRetroPopFilter(image); 
-            //            break;
-            //        case 2:
-            //            ApplyVintageFilmFilter(image);  
-            //            break;
-            //        case 3:
-            //            ApplyRetroSunsetFilter(image);  
-            //            break;
-            //        case 4:
-            //            ApplyPolaroidHushFilter(image);  
-            //            break;
-            //        case 5:
-            //            ApplyMoodyVinylFilter(image);  
-            //            break;
-            //        default:
-            //            break;
-            //    }
-
-            //    images.Add(image);
-            //}
-
             var filterId = request.FilterId >> 0;
 
             // Load and apply filter
@@ -141,11 +111,10 @@ namespace Snap.Services
             // Photo grid
             for (int i = 0; i < images.Count; i++)
             {
-                //int row = i;
                 int x = leftMargin;
                 int y = topMargin + i * (photoHeight + spacing);
 
-                //images[i].Mutate(ctx => ctx.ApplyFilter(request.FilterId));
+                // Apply filter
                 images[i].ApplyFilter((int)request.FilterId);
 
                 finalImage.Mutate(ctx => ctx.DrawImage(images[i], new Point(x, y), 1f));
