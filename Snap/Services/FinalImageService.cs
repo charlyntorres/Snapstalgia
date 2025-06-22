@@ -49,55 +49,19 @@ namespace Snap.Services
                 switch (request.FilterId)
                 {
                     case 1:
-                        ApplyPinterest1Filter(image);   // 90s vintage cam
+                        ApplyPinterest2Filter(image);  // Retro Pop
                         break;
                     case 2:
-                        ApplyPinterest2Filter(image);  // RetroPop
+                        ApplyPinterest4Filter(image);  // Vintage Film
                         break;
                     case 3:
-                        ApplyPinterest3Filter(image);   // Japancore
+                        ApplyPinterest5Filter(image);  // Retro Sunset
                         break;
                     case 4:
-                        ApplyPinterest4Filter(image);  // VintageFilm
+                        ApplyPinterest8Filter(image);   // Polaroid Hush
                         break;
                     case 5:
-                        ApplyPinterest5Filter(image);  // RetroSunset
-                        break;
-                    case 6:
-                        ApplyPinterest6Filter(image);    // VSCO dispo c1
-                        break;
-                    case 7:
-                        ApplyPinterest7Filter(image);   // Retro 14+7.0
-                        break;
-                    case 8:
-                        ApplyPinterest8Filter(image);   // G3 portraits
-                        break;
-                    case 9:
-                        ApplyPinterest9Filter(image);   //M4 mood
-                        break;                                       
-                    case 10:
-                        ApplyPinterest10Filter(image);  // BubblegumPop
-                        break;
-                    case 11:
-                        ApplyPinterest11Filter(image); // 90sVHS
-                        break;
-                    case 12:
-                        ApplyPinterest12Filter(image);  // InstantFilm
-                        break;
-                    case 13:
-                        ApplyPinterest13Filter(image);  // GrungeFade
-                        break;
-                    case 14:
-                        ApplyPinterest14Filter(image);  // DustyRose
-                        break;
-                    case 15:
-                        ApplyPinterest15Filter(image);  // MidnightMood
-                        break;
-                    case 16:
-                        ApplyPinterest16Filter(image);  // HoneyDrip
-                        break;
-                    case 17:
-                        ApplyPinterest17Filter(image);  // FilmNoir
+                        ApplyPinterest13Filter(image);  // Moody Vinyl
                         break;
                     default:
                         break;
@@ -133,13 +97,9 @@ namespace Snap.Services
 
             var inputColor = request.FrameColor?.Trim().TrimStart('#').ToUpperInvariant();
 
-            Console.WriteLine("Incoming FrameColor: " + request.FrameColor);
-
             var colorHex = !string.IsNullOrEmpty(inputColor) && allowedColors.Contains(inputColor)
                 ? inputColor
                 : "BA5E62";
-
-            Console.WriteLine("Selected color hex: " + colorHex);
 
             var frameColor = Color.ParseHex("#" + colorHex);
 
@@ -245,20 +205,6 @@ namespace Snap.Services
             return fontFamily.CreateFont(size);
         }
 
-        // FITLER PINTEREST 1
-        private void ApplyPinterest1Filter(Image<Rgba32> image)
-        {
-            image.Mutate(ctx =>
-            {
-                ctx.Brightness(1.15f)
-                   .Contrast(0.8f)
-                   .Saturate(1.5f)
-                   .GaussianSharpen(1.5f)
-                   .Vignette(Color.FromRgba(0, 0, 0, 150));
-            });
-
-        }
-
         // FILTER PINTEREST 2
         private void ApplyPinterest2Filter(Image<Rgba32> image)
         {
@@ -274,20 +220,6 @@ namespace Snap.Services
             });
 
             AddGrainNoise(image, intensity: 0.03f);
-        }
-
-        // FILTER PINTEREST 3
-        private void ApplyPinterest3Filter(Image<Rgba32> image)
-        {
-            image.Mutate(ctx =>
-            {
-                ctx.Brightness(1.22f)            
-                   .Contrast(0.72f)              
-                   .Saturate(1.09f)              
-                   .GaussianSharpen(1.1f);     
-            });
-
-            AddGrainNoise(image, 0.012f);
         }
 
         // FILTER PINTEREST 4
@@ -328,47 +260,6 @@ namespace Snap.Services
             });
         }
 
-        // FILTER PINTEREST 6
-        private void ApplyPinterest6Filter(Image<Rgba32> image)
-        {
-            image.Mutate(ctx =>
-            {
-                ctx.Brightness(1.05f)              
-                   .Contrast(1.25f)               
-                   .Saturate(1.15f)                
-                   .Hue(4f)                        
-                   .GaussianSharpen(1.0f);         
-
-                var greenishOverlay = Color.FromRgba(160, 255, 200, 20); 
-                ctx.Fill(greenishOverlay);
-            });
-
-            var fadeOverlay = Color.FromRgba(255, 255, 255, 20);
-            image.Mutate(ctx => ctx.Fill(fadeOverlay));
-
-            image.Mutate(ctx => ctx.Vignette(Color.FromRgba(0, 0, 0, 90)));
-
-            AddGrainNoise(image, 0.01f);
-        }
-
-        // FILTER PINTEREST 7
-        private static void ApplyPinterest7Filter(Image<Rgba32> image)
-        {
-            image.Mutate(ctx =>
-            {
-                ctx.Brightness(1.05f)             
-                   .Contrast(0.85f)              
-                   .Saturate(1.1f)               
-                   .Hue(10f)                      
-                   .GaussianSharpen(0.8f);        
-
-                var overlay = Color.FromRgba(255, 240, 180, 30);
-                ctx.Fill(overlay);
-            });
-
-            image.Mutate(ctx => ctx.Fill(Color.FromRgba(255, 255, 255, 35))); 
-        }
-
         // FILTER PINTEREST 8
         private void ApplyPinterest8Filter(Image<Rgba32> image)
         {
@@ -388,70 +279,6 @@ namespace Snap.Services
             AddGrainNoise(image, 0.03f);
         }
 
-        // FILTER PINTEREST 9
-        private void ApplyPinterest9Filter(Image<Rgba32> image)
-        {
-            image.Mutate(ctx =>
-            {
-                ctx.Brightness(0.95f)             
-                   .Contrast(1.1f)                
-                   .Saturate(1.0f)                
-                   .Hue(-3f);                     
-                
-                var brownTone = Color.FromRgba(180, 140, 100, 35);
-                ctx.Fill(brownTone);
-                
-                ctx.Lightness(1.1f);
-            });
-
-            AddGrainNoise(image, 0.02f);
-        }
-
-        // FILTER PINTEREST 10
-        private void ApplyPinterest10Filter(Image<Rgba32> image)
-        {
-            image.Mutate(ctx =>
-            {
-                ctx.Hue(320)
-                   .Saturate(1.8f)
-                   .Brightness(1.2f)
-                   .Contrast(0.9f);
-
-                var overlayColor = Color.FromRgba(255, 182, 193, 50); 
-                ctx.Fill(overlayColor);
-            });
-
-            AddGrainNoise(image);
-        }
-
-        // FILTER PINTEREST 11
-        private void ApplyPinterest11Filter(Image<Rgba32> image)
-        {
-            image.Mutate(ctx =>
-            {
-                ctx.Hue(285) 
-                   .Brightness(1.1f)
-                   .Contrast(1.3f)
-                   .Saturate(1.2f);
-            });
-
-            AddGrainNoise(image, 0.025f);
-        }
-
-        // FILTER PINTEREST 12
-        private void ApplyPinterest12Filter(Image<Rgba32> image)
-        {
-            image.Mutate(ctx =>
-            {
-                ctx.Brightness(1.1f)
-                   .Contrast(1.0f)
-                   .Saturate(0.9f)
-                   .Hue(35); 
-            });
-
-            AddGrainNoise(image, 0.01f);
-        }
-
         // FILTER PINTEREST 13
         private void ApplyPinterest13Filter(Image<Rgba32> image)
         {
@@ -464,62 +291,6 @@ namespace Snap.Services
             });
 
             AddGrainNoise(image, 0.02f);
-        }
-
-        // FILTER PINTEREST 14
-        private void ApplyPinterest14Filter(Image<Rgba32> image)
-        {
-            image.Mutate(ctx =>
-            {
-                ctx.Hue(330)
-                   .Saturate(0.75f)
-                   .Brightness(1.0f)
-                   .Contrast(0.9f);
-            });
-
-            AddGrainNoise(image, 0.012f);
-        }
-
-        // FILTER PINTEREST 15
-        private static void ApplyPinterest15Filter(Image<Rgba32> image)
-        {
-            image.Mutate(ctx =>
-            {
-                ctx.Hue(220)              
-                   .Contrast(1.3f)
-                   .Brightness(0.95f)
-                   .Saturate(0.9f);
-
-                ctx.Vignette(Color.FromRgba(0, 0, 40, 100));
-            });            
-        }
-
-        // FILTER PINTEREST 16
-        private static void ApplyPinterest16Filter(Image<Rgba32> image)
-        {
-            image.Mutate(ctx =>
-            {
-                ctx.Hue(40)
-                   .Saturate(1.2f)
-                   .Brightness(1.1f)
-                   .Contrast(1.1f);
-            });
-
-            var overlay = Color.FromRgba(255, 223, 140, 50); 
-            image.Mutate(ctx => ctx.Fill(overlay));
-        }
-
-        // FILTER PINTEREST 17
-        private static void ApplyPinterest17Filter(Image<Rgba32> image)
-        {
-            image.Mutate(ctx =>
-            {
-                ctx.Grayscale()
-                   .Brightness(0.9f)
-                   .Contrast(1.5f);
-                
-                ctx.Vignette(Color.FromRgba(0, 0, 0, 120)); 
-            });           
         }
 
         // Grain Helper 1
