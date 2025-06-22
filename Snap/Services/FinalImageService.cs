@@ -12,6 +12,7 @@ using SixLabors.ImageSharp.Drawing;
 using Snap.Helpers;
 using SixLabors.ImageSharp.Processing.Processors.Filters;
 using SixLabors.ImageSharp.Processing.Processors;
+using Snap.Helpers;
 
 namespace Snap.Services
 {
@@ -41,34 +42,46 @@ namespace Snap.Services
                 throw new Exception($"Not enough images for layout. Expected {expectedCount}, found {imageFiles.Count}.");
 
             // Filter
-            var images = new List<Image<Rgba32>>();
-            foreach (var file in imageFiles.Take(expectedCount))
-            {
-                var image = Image.Load<Rgba32>(file);
+            //var images = new List<Image<Rgba32>>();
+            //foreach (var file in imageFiles.Take(expectedCount))
+            //{
+            //    var image = Image.Load<Rgba32>(file);
 
-                switch (request.FilterId)
+            //    switch (request.FilterId)
+            //    {
+            //        case 1:
+            //            ApplyRetroPopFilter(image); 
+            //            break;
+            //        case 2:
+            //            ApplyVintageFilmFilter(image);  
+            //            break;
+            //        case 3:
+            //            ApplyRetroSunsetFilter(image);  
+            //            break;
+            //        case 4:
+            //            ApplyPolaroidHushFilter(image);  
+            //            break;
+            //        case 5:
+            //            ApplyMoodyVinylFilter(image);  
+            //            break;
+            //        default:
+            //            break;
+            //    }
+
+            //    images.Add(image);
+            //}
+
+            var filterId = request.FilterId >> 0;
+
+            // Load and apply filter
+            var images = imageFiles.Take(expectedCount)
+                .Select(path =>
                 {
-                    case 1:
-                        ApplyRetroPopFilter(image); 
-                        break;
-                    case 2:
-                        ApplyVintageFilmFilter(image);  
-                        break;
-                    case 3:
-                        ApplyRetroSunsetFilter(image);  
-                        break;
-                    case 4:
-                        ApplyPolaroidHushFilter(image);  
-                        break;
-                    case 5:
-                        ApplyMoodyVinylFilter(image);  
-                        break;
-                    default:
-                        break;
-                }
-
-                images.Add(image);
-            }
+                    var image = Image.Load<Rgba32>(path);
+                    image.ApplyFilter((int)filterId);
+                    return image;
+                })
+                .ToList();
 
             int photoWidth = images[0].Width;
             int photoHeight = images[0].Height;
@@ -96,26 +109,22 @@ namespace Snap.Services
             };
 
             var inputColor = request.FrameColor?.Trim().TrimStart('#').ToUpperInvariant();
-
-            Console.WriteLine("Incoming FrameColor: " + request.FrameColor);
-
             var colorHex = !string.IsNullOrEmpty(inputColor) && allowedColors.Contains(inputColor)
                 ? inputColor
                 : "BA5E62";
 
-            Console.WriteLine("Selected color hex: " + colorHex);
-
             var frameColor = Color.ParseHex("#" + colorHex);
-
-            Color textColor;
-            if (GetLuminance(frameColor) < 0.5)
-            {
-                textColor = Color.ParseHex("F9E5DA");
-            }
-            else
-            {
-                textColor = Color.ParseHex("1E1E1E");
-            }
+            var textColor = GetLuminance(frameColor) < 0.5 ? Color.ParseHex("F9E5DA") : Color.ParseHex("BA5E62");
+            
+            //Color textColor;
+            //if (GetLuminance(frameColor) < 0.5)
+            //{
+            //    textColor = Color.ParseHex("F9E5DA");
+            //}
+            //else
+            //{
+            //    textColor = Color.ParseHex("1E1E1E");
+            //}
 
             using var finalImage = new Image<Rgba32>(finalWidth, finalHeight);
             finalImage.Mutate(ctx => ctx.Clear(frameColor));
@@ -146,7 +155,9 @@ namespace Snap.Services
                 int x = leftMargin;
                 int y = topMargin + i * (photoHeight + spacing);
 
-                images[i].Mutate(ctx => ctx.ApplyFilter(request.FilterId));
+                //images[i].Mutate(ctx => ctx.ApplyFilter(request.FilterId));
+                images[i].ApplyFilter((int)request.FilterId);
+
                 finalImage.Mutate(ctx => ctx.DrawImage(images[i], new Point(x, y), 1f));
                 images[i].Dispose();
             }

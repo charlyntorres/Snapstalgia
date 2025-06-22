@@ -35,10 +35,10 @@ namespace Snap.Controllers
             var finalFileName = $"{fileBaseName}_final_{DateTime.Now:yyyyMMdd_HHmmss}.png";
             var finalPath = System.IO.Path.Combine(finalFolder, finalFileName);
 
-            using var image = await Image.LoadAsync(originalPath);
+            using var image = await Image.LoadAsync<Rgba32>(originalPath);
 
-            // Apply filter            
-            image.Mutate(x => x.ApplyFilter(request.FilterId));
+            // Apply filter                        
+            image.ApplyFilter((int)request.FilterId);
 
             // Add sticker overlays
             if (StickerPresets.TryGetStickerPaths(request.LayoutType, request.StickerId, out var behindRelativePath, out var frontRelativePath))
