@@ -68,14 +68,19 @@ namespace Snap.Services
                 "D2A24C",   // Warm gold
                 "ECE6C2",   // Pale beige
                 "6F5643",   // Coffee brown
-                "C2DFF3"    // Baby brown
+                "C2DFF3"    // Baby blue
             };
 
-            var inputColor = request.FrameColor?.Trim().ToUpperInvariant();
+            var inputColor = request.FrameColor?.Trim().TrimStart('#').ToUpperInvariant();
+
+            Console.WriteLine("Incoming FrameColor: " + request.FrameColor);
+
             var colorHex = !string.IsNullOrEmpty(inputColor) && allowedColors.Contains(inputColor)
                 ? inputColor
                 : "BA5E62";
-            
+
+            Console.WriteLine("Selected color hex: " + colorHex);
+
             var frameColor = Color.ParseHex("#" + colorHex);
 
             Color textColor;
