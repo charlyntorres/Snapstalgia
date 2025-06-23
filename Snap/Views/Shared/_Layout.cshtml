@@ -3,60 +3,92 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--Snapstalgia Title-->
     <title>@ViewData["Title"] - Snaptalgia</title>
+    <link rel="icon" href="/Assets/Logo.png">
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Snap.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="HomePage">logo</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="HomePage">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="About" asp-action="AboutPage">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="PrivacyPolicy" asp-action="PrivacyPolicyPage">Privacy Policy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Contact" asp-action="ContactPage">Contact</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ChooseLayout" asp-action="ChooseLayoutPage">Choose Layout</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Profile" asp-action="ProfilePage">Profile</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial.cshtml" />
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="layout-wrapper">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="layout-wrapper">
-            &copy; 2025 - Snap - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+<body class="page-wrapper">
+    <header class="header-container">
+        <div class="header-nav">
+            <!--Snapstalgia Logo-->
+            <img class="logo" src="/Assets/Logo.png" alt="Snapstalgia Logo" />
+
+            <!--Header Navigation Text-->
+            <nav class="nav-texts">
+                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="HomePage">Home</a>
+                <a class="nav-link" asp-area="" asp-controller="About" asp-action="AboutPage">About</a>
+                <a class="nav-link" asp-area="" asp-controller="PrivacyPolicy" asp-action="PrivacyPolicyPage">Privacy Policy</a>
+                <a class="nav-link" asp-area="" asp-controller="Contact" asp-action="ContactPage">Contact</a>
+                <a class="nav-link" asp-area="" asp-controller="ChooseLayout" asp-action="ChooseLayoutPage">Choose Layout</a>
+            </nav>
+
+            <a class="profile" asp-area="" asp-controller="Profile" asp-action="ProfilePage">
+                <img src="/Assets/profile.png" alt="Profile Logo" />
+            </a>
+        </div>
+    </header>
+
+    <main class="content-wrapper">
+        <div class="container">
+            @RenderBody()
+        </div>
+    </main>
+
+    <!--Footer Tab-->
+    <footer class="footer-container">
+        <div class="footer-nav">
+            <div class="footer-tagline">
+                <img class="footer-logo" src="/Assets/Logo.png" alt="Snapstalgia Logo" />
+                <p class="tagline">Feel the Flashback with Every Snap</p>
+            </div>
+
+            <!--Footer Navigation Text-->
+            <div class="footer-body">
+                <div class="footer-text">
+                    <nav class="nav-texts1">
+                        <a class="nav-link" asp-area="" asp-controller="About" asp-action="AboutPage">About Us</a>
+                        <a class="nav-link" asp-area="" asp-controller="PrivacyPolicy" asp-action="PrivacyPolicyPage">Privacy Policy</a>
+                        <a class="nav-link" asp-area="" asp-controller="About" asp-action="AboutPage">FAQs</a>
+                        <a class="nav-link" asp-area="" asp-controller="Contact" asp-action="ContactPage">Contact</a>
+                    </nav>
+
+                    <nav class="nav-texts2">
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="HomePage">How it Worls</a>
+                        <a class="nav-link" asp-area="" asp-controller="ChooseLayout" asp-action="ChooseLayoutPage">Choose Layout</a>
+                        <a class="nav-link" asp-area="" asp-controller="Profile" asp-action="ProfilePage">Profile</a>
+                    </nav>
+                </div>
+                <p class="copyright">&copy; 2025 Snapstalgia. All rights reserved.</p>
+            </div>
+
+            <div class="follow-us">
+                <p class="follow-text">Follow us on!</p>
+                <nav class="socmed">
+                    <a href="" target="_blank">
+                        <img class="socmed-icon" src="/Assets/ig.png" alt="Instragram" />
+                    </a>
+                    <a href="" target="_blank">
+                        <img class="socmed-icon" src="/Assets/tiktok.png" alt="Tiktok" />
+                    </a>
+                    <a href="" target="_blank">
+                        <img class="socmed-icon" src="/Assets/yt.png" alt="Youtube" />
+                    </a>
+                </nav>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+
