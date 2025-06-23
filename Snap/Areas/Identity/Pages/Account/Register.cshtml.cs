@@ -122,7 +122,7 @@ namespace Snap.Areas.Identity.Pages.Account
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return RedirectToPage("/Account/UploadPhoto", new { area = "Identity" });
+                        return RedirectToAction("ProfilePage", "Profile");
                     }
                 }
 
