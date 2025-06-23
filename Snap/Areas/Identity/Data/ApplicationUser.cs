@@ -5,16 +5,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-namespace Snap.Areas.Identity.Data;
-
-// Add profile data for application users by adding properties to the ApplicationUser class
-public class ApplicationUser : IdentityUser
+namespace Snap.Areas.Identity.Data
 {
-    [PersonalData]
-    [Column(TypeName = "nvarchar(100)")]
-    public string FirstName { get; set; }
-
-    [PersonalData]
-    [Column(TypeName = "nvarchar(100)")]
-    public string LastName { get; set; }
+    // Custom application user extending IdentityUser
+    public class ApplicationUser : IdentityUser
+    {
+        // - UserName
+        // - Email
+        // - PhoneNumber
+        // - PasswordHash
+        // - and more
+    }
 }

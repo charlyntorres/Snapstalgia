@@ -1,21 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Snap.Models;
-using Snap.Helpers;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.Drawing;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SixLabors.Fonts;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing;
+using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using Snap.Helpers;
+using Snap.Models;
+using System;
 using System.Globalization;
+using System.IO;
 using System.Linq.Expressions;
 using System.Numerics;
+using System.Threading.Tasks;
 
 namespace Snap.Controllers
 {
+    [Authorize]
     public class FinalImageController : Controller
     {
         [HttpPost]

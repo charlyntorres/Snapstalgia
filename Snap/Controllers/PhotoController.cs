@@ -1,21 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using Snap.Helpers;
+using Snap.Models;
+using Snap.Services;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Snap.Models;
-using Snap.Services;
-using Snap.Helpers;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 
 
 namespace Snap.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class PhotoController : ControllerBase
     {
         private readonly IFinalImageService _finalImageService;
