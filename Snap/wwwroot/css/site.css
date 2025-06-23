@@ -499,6 +499,7 @@ p {
     font-size: 14px;
 }
 
+<<<<<<< Updated upstream
 html, body {
     height: 100%;
     margin: 0;
@@ -1135,3 +1136,200 @@ input, textarea {
 }
 
 
+=======
+/*-------------------------------------------------------------------------*/
+
+/* Aboutpage Interface */
+
+.about-wrapper {
+    background-color: var(--color-accent);
+    padding: 60px 20px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+}
+
+.about-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px; 
+    max-width: 890px; 
+    width: 100%;
+}
+
+.about-section h1 {
+    font-family: var(--font-heading);
+    font-size: 55px; 
+    font-weight: 400;
+    color: var(--color-primary); 
+    text-align: center;
+    text-shadow: var(--shadow-default);
+    margin: 0;
+}
+
+.about-image {
+    border-radius: 20px;
+    width: 100%;
+    max-width: 766px; 
+    height: auto;
+}
+
+.about-description {
+    max-width: 800px;
+    font-family: var(--font-body);
+    font-size: 20px; 
+    line-height: 34px; 
+    font-weight: 400;
+    color: var(--color-text); 
+    text-align: justify;
+    margin: 0 auto;
+    padding: 0 10px 60px;
+}
+
+
+/* KEY FEATURES SECTION */
+.key-features {
+    background-color: var(--color-secondary); 
+    padding: 75px 40px; 
+    text-align: center;
+    border-radius: 30px;
+    margin: 0 auto 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    max-width: 1200px;
+}
+
+/* Heading */
+.key-features h2 {
+    font-family: var(--font-heading);
+    color: var(--color-accent); 
+    text-shadow: var(--shadow-default);
+    font-weight: 400;
+    font-size: 50px;
+    margin-bottom: 0;
+}
+
+/* Feature layout */
+.feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    width: 100%;
+}
+
+.feature-row {
+    display: flex;
+    justify-content: center;
+    gap: 100px;
+    flex-wrap: wrap; 
+}
+
+.feature {
+    width: 246px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+/* Icon styling */
+.feature img {
+    width: 100px;
+    height: 100px;
+    background-color: var(--color-accent);
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    object-fit: scale-down;
+    padding: 0;
+    display: block;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.feature img:hover {
+    box-shadow: 0 0 30px 1px #EFA5A6;
+    transform: scale(1.05);
+}
+
+/* Label styling */
+.feature p {
+    font-size: 22px;
+    font-family: var(--font-body);
+    font-weight: 800;
+    color: var(--color-accent); 
+    text-align: center;
+    margin: 0;
+}
+
+
+/* FAQ SECTION */
+.faq {
+    padding: 60px 20px;
+}
+
+.faq-subtext {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--color-text);
+    text-align: center;
+    margin-bottom: 30px;
+    font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+.faq-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 760px;
+}
+
+.faq-item {
+    background-color: #F9E5DA;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 25px 2px rgba(186, 94, 98, 0.2);
+    overflow: hidden;
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1E1E1E;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    position: relative;
+}
+
+.faq-question p {
+    font-weight: 700;
+    margin: 0;
+}
+
+.faq-toggle {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1;
+    transition: transform 0.3s ease;
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+    padding: 0 24px;
+}
+
+.faq-item.open .faq-answer {
+    max-height: 500px; 
+    opacity: 1;
+    padding: 10px 24px 20px;
+}
+>>>>>>> Stashed changes
