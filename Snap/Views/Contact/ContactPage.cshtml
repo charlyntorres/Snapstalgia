@@ -1,4 +1,53 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Contact Us";
 }
+
+<div class='contact-wrapper'>
+    <div class='contact-msg'>
+        <h1 class="contact-header">@ViewData["Title"]</h1>
+
+        <div class="contact-body">
+            <p class='contact-text'>
+                Got something on your mind? We’re all ears. Whether you’re reaching out with a question, sharing feedback,
+                or just want to say hi—we’re here for it. Send us a message and we’ll make sure to get back to you soon!
+            </p>
+
+            <div class='socmed'>
+                <p>Follow us on!</p>
+                <!--social-media-icons-->
+                <div class="socmed-icons">
+                    <!--instagram-->
+                    <a href="" target="_blank">
+                        <img class="icon" src='/Assets/ig1.png' alt="Instagram Logo">
+                    </a>
+                    <!--tiktok-->
+                    <a href="" target="_blank">
+                        <img class="icon" src='/Assets/tiktok1.png' alt="Facebook">
+                    </a>
+                    <!--youtube-->
+                    <a href="" target="_blank">
+                        <img class="icon" src='/Assets/yt1.png' alt="Instagram">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form class='contact-form'>
+        <div class="fill-up">
+            <!--name-->
+            <label for="name">Name</label>
+            <input type="text" placeholder="Enter your name" id="name" name="name" />
+            <!--email-->
+            <label for="email">Email</label>
+            <input type="email" placeholder="example@gmail.com" id="email" name="email" required />
+            <!--message-->
+            <label for="message">Message</label>
+            <textarea id="message" placeholder="Enter your message" name="message" required></textarea>
+        </div>
+        <!--button submit-->
+        <button class='btn-1' type="submit">Send Message</button>
+    </form>
+</div>
+
+
