@@ -8,9 +8,6 @@ var connectionString = builder.Configuration.GetConnectionString("AuthDbContextC
 
 builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<AuthDbContext>();
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IFinalImageService, FinalImageService>();
@@ -29,6 +26,9 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireUppercase = false;
 });
 
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<AuthDbContext>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -44,6 +44,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

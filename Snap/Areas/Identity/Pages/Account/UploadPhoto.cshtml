@@ -1,0 +1,17 @@
+﻿@page
+@model UploadPhotoModel
+@{
+    ViewData["Title"] = "Upload Profile Photo";
+    Layout = "~/Areas/Identity/Pages/_AuthLayout.cshtml";
+}
+
+<h2>Upload a Profile Photo</h2>
+<form method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <input type="file" name="ProfileImage" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Upload</button>
+        <a asp-controller="Profile" asp-action="ProfilePage" class="btn btn-secondary">Skip</a>
+    </div>
+</form>

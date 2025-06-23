@@ -12,7 +12,7 @@ using Snap.Areas.Identity.Data;
 namespace Snap.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20250621092006_Initial Create")]
+    [Migration("20250623092148_Initial Create")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -180,14 +180,6 @@ namespace Snap.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
