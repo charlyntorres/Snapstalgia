@@ -14,12 +14,24 @@ using System.IO;
 using System.Linq.Expressions;
 using System.Numerics;
 using System.Threading.Tasks;
+using Snap.Data;
+using Microsoft.AspNetCore.Identity;
+using Snap.Areas.Identity.Data;
 
 namespace Snap.Controllers
 {
     [Authorize]
     public class FinalImageController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _context;
+
+        public FinalImageController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        {
+            _userManager = userManager;
+            _context = context;
+        }
+
         [HttpPost]
         public async Task<IActionResult> FinalizeImage([FromBody] FinalizeRequest request)
         {
@@ -94,6 +106,23 @@ namespace Snap.Controllers
             }
 
             await image.SaveAsPngAsync(finalPath);
+
+            // Save photo to db
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                var relativePath = System.IO.Path.Combine("images", "final", finalFileName).Replace("\\", "/");
+
+                var photo = new Photo
+                {
+                    UserId = user.Id,
+                    FilePath = relativePath,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _context.Photos.Add(photo);
+                await _context.SaveChangesAsync();
+            }
 
             return Ok(new { FinalFileName = finalFileName });
         }
