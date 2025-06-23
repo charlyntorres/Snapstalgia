@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Snap.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class ChooseLayoutController : Controller
     {
         public IActionResult ChooseLayoutPage()

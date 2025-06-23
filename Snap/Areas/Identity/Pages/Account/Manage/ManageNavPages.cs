@@ -6,7 +6,7 @@ using System;
 
 namespace Snap.Areas.Identity.Pages.Account.Manage
 {
-    [Authorize]
+    //[Authorize]
     public static class ManageNavPages
     {
         public static string Index => "Index";
