@@ -81,10 +81,10 @@ namespace Snap.Services
             var inputColor = request.FrameColor?.Trim().TrimStart('#').ToUpperInvariant();
             var colorHex = !string.IsNullOrEmpty(inputColor) && allowedColors.Contains(inputColor)
                 ? inputColor
-                : "354E52";
+                : "BA5E62";
 
             var frameColor = Color.ParseHex("#" + colorHex);
-            var textColor = GetLuminance(frameColor) < 0.5 ? Color.ParseHex("F9E5DA") : Color.ParseHex("BA5E62");            
+            var textColor = GetLuminance(frameColor) < 0.5 ? Color.ParseHex("F9E5DA") : Color.ParseHex("354E52");            
 
             using var finalImage = new Image<Rgba32>(finalWidth, finalHeight);
             finalImage.Mutate(ctx => ctx.Clear(frameColor));
