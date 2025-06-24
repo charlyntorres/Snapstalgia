@@ -1,4 +1,102 @@
-﻿
-@{
-    ViewData["Title"] = "About Us";
+﻿@{
+    ViewData["Title"] = "About Snapstalgia";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="about-wrapper">
+    <div class="header">
+        <h1>About Snapstalgia</h1>
+    </div>
+
+    <section class="about-section">
+        <img src="~/Assets/img.png" alt="Snapstalgia Booth" class="about-image" />
+        <p class="about-description">
+            Snapstalgia is your go-to retro-style online photobooth that captures the charm of old-school photography with a modern twist. It lets you take photos directly from your device, apply vintage filters and fun frames, and create timeless photo strips. Whether you're feeling nostalgic or just want something fun and unique, Snapstalgia brings those retro vibes right to your screen.
+        </p>
+    </section>
+
+    <section class="key-features">
+        <h2>Key Features</h2>
+        <div class="feature-list">
+            <div class="feature-row">
+                <div class="feature">
+                    <img src="~/Assets/icon-camera.png" alt="Photo Capture" />
+                    <p>Photo Capture</p>
+                </div>
+                <div class="feature">
+                    <img src="~/Assets/icon-strips.png" alt="Strip Layouts" />
+                    <p>Strip Layouts</p>
+                </div>
+                <div class="feature">
+                    <img src="~/Assets/icon-style.png" alt="Retro Styling Tools" />
+                    <p>Retro Styling Tools</p>
+                </div>
+            </div>
+            <div class="feature-row">
+                <div class="feature">
+                    <img src="~/Assets/icon-download.png" alt="One-Click Download" />
+                    <p>One-Click Download</p>
+                </div>
+                <div class="feature">
+                    <img src="~/Assets/icon-gallery.png" alt="Profile Gallery" />
+                    <p>Profile Gallery</p>
+                </div>
+                <div class="feature">
+                    <img src="~/Assets/icon-browser.png" alt="Browser-Based" />
+                    <p>Browser-Based</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="faq">
+        <h2>Frequently Asked Questions</h2>
+        <p class="faq-subtext">Create your perfect vintage photobooth strip in just five fun steps.</p>
+
+        <ul class="faq-list">
+            <li class="faq-item">
+                <div class="faq-question">
+                    <p>Do I need to install anything to use the photobooth?</p>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">Nope! Snapstalgia runs directly in your browser. Just open the site, and you're good to go—no downloads needed.</div>
+            </li>
+            <li class="faq-item">
+                <div class="faq-question">
+                    <p>Is Snapstalgia completely free to use?</p>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">Absolutely! All features—layouts, downloads, and sharing—are 100% free with no hidden costs.</div>
+            </li>
+            <li class="faq-item">
+                <div class="faq-question">
+                    <p>Can I use Snapstalgia on my phone or tablet?</p>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">Yes! Snapstalgia is mobile-friendly and works on phones and tablets with modern browsers.</div>
+            </li>
+            <li class="faq-item">
+                <div class="faq-question">
+                    <p>Can I download my photo strips?</p>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">Yes! After taking a photo, you can instantly download it from your profile to save or print.</div>
+            </li>
+            <li class="faq-item">
+                <div class="faq-question">
+                    <p>How do I share my photo strip on social media?</p>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">After downloading your photo strip, you can upload and share it to your favorite social media platforms.</div>
+            </li>
+        </ul>
+
+    </section>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/faq.js" asp-append-version="true"></script>
 }
