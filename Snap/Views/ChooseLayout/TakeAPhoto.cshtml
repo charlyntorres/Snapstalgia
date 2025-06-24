@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Take a Photo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="take-photo-wrapper">
+
+    <div class="booth-steps-container">
+        <!--Step 1-->
+        <div class="booth-step">
+            <div class="step-content">
+                <div class="booth-icon">
+                    <img src="/Assets/step1-layout.png" alt="Layout Icon" style="opacity: 0.5;" />
+                </div>
+                <p class="step-label" style="opacity: 0.5;">Layout</p>
+            </div>
+        </div>
+
+        <!-- Line -->
+        <div class="line-container"></div>
+
+        <!-- Step 2 -->
+        <div class="booth-step">
+            <div class="step-content">
+                <div class="booth-icon">
+                    <img src="/Assets/step2-snap.png" alt="Snap Icon" />
+                </div>
+                <p class="step-label">Snap</p>
+            </div>
+        </div>
+
+        <!-- Line -->
+        <div class="line-container"></div>
+
+        <!-- Step 3 -->
+        <div class="booth-step">
+            <div class="step-content">
+                <div class="booth-icon">
+                    <img src="/Assets/step3-customize.png" alt="Customize Icon" style="opacity: 0.5;" />
+                </div>
+                <p class="step-label" style="opacity: 0.5;">Customize</p>
+            </div>
+        </div>
+    </div>
+
+
+
+    <section class="camera-section">
+        <h2 class="snap-title">Snap your pics</h2>
+
+        <div class="snap-layout">
+            <div class="camera-area">
+                <div class="camera-frame">
+                    <video id="video" autoplay playsinline></video>
+                    <div id="countdown" class="countdown"></div>
+                    <div id="flashEffect" class="flash-effect"></div>
+                </div>
+                <div class="btn-row">
+                    <button class="btn-1 btn-start">Start</button>
+                </div>
+
+            </div>
+
+            <div class="photo-strip" id="photoStrip">
+                <div class="strip-frame" id="strip0"></div>
+                <div class="strip-frame" id="strip1"></div>
+                <div class="strip-frame" id="strip0"></div>
+                <div class="strip-frame" id="strip1"></div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <script src="~/js/take-photo.js"></script>
+}
+
+
