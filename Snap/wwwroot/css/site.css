@@ -1332,4 +1332,161 @@ input, textarea {
     opacity: 1;
     padding: 10px 24px 20px;
 }
->>>>>>> Stashed changes
+
+/*====================
+  TAKE A PHOTO PAGE
+====================*/
+.take-photo-wrapper {
+    width: 100%;
+    padding: 80px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 120px;
+}
+
+
+/* Camera Section */
+.camera-section {
+    width: 100%;
+    max-width: 1100px;
+    background: var(--color-light);
+    border-radius: 20px;
+    padding: 40px 50px 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+}
+
+/* Title */
+.snap-title {
+    font-family: var(--font-heading);
+    font-size: 45px;
+    font-weight: 400;
+    color: var(--color-accent);
+    text-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+    text-align: center;
+    margin: 0;
+}
+
+/* Snap Layout */
+.snap-layout {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 70px;
+    flex-wrap: wrap;
+}
+
+/* Camera Area */
+.camera-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.camera-frame {
+    position: relative;
+    width: 500px;
+    height: 360px;
+    background: #828282;
+    border-radius: 5px;
+    border: 2px solid var(--color-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Video Feed */
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1); /* Mirror for selfie effect */
+}
+
+/* Countdown */
+.countdown {
+    position: absolute;
+    font-size: 80px;
+    font-weight: 800;
+    color: var(--color-accent);
+    font-family: var(--font-body);
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    z-index: 3;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Flash Effect */
+.flash-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    opacity: 0;
+    z-index: 2;
+    transition: opacity 0.2s ease;
+}
+
+/* Button Row */
+.btn-row {
+    display: flex;
+    gap: 30px;
+}
+
+.btn-1:hover,
+.btn-2:hover {
+    transform: translateY(-2px);
+    filter: brightness(90%);
+}
+
+/* Photo Strip */
+.photo-strip {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.strip-frame {
+    width: 125px;
+    height: 90px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    border: 1.5px solid var(--color-text);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .snap-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .camera-frame {
+        width: 90%;
+        height: auto;
+        aspect-ratio: 4 / 3;
+    }
+
+    .photo-strip {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .strip-frame {
+        width: 90px;
+        height: 65px;
+    }
+}
