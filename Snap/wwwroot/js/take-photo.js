@@ -107,3 +107,18 @@ navigator.mediaDevices.getUserMedia({ video: true })
 // Initialize
 startBtn.addEventListener("click", startPhotoSession);
 setupButtons();
+
+
+// redirect to designated customize photo per layout when done
+doneBtn.addEventListener("click", () => {
+    localStorage.setItem("photos", JSON.stringify(imageData));
+    const layout = startBtn.dataset.layout;
+
+    if (layout === "1x2") {
+        window.location.href = "/ChooseLayout/Customize1x2photo";
+    } else if (layout === "1x4") {
+        window.location.href = "/ChooseLayout/Customize1x4photo";
+    } else {
+        window.location.href = "/ChooseLayout/Customize1x3photo";
+    }
+});

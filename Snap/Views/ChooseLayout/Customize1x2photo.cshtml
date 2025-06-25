@@ -1,0 +1,206 @@
+﻿@{
+    ViewData["Title"] = "Customize Photo (2 Strips)";
+}
+
+<div class="customize-wrapper">
+    <div class="booth-steps-container">
+        <!--Step 1-->
+        <div class="booth-step">
+            <div class="step-content">
+                <div class="booth-icon">
+                    <img src="/Assets/step1-layout.png" alt="Layout Icon" style="opacity: 0.5;" />
+                </div>
+                <p class="step-label" style="opacity: 0.5;">Layout</p>
+            </div>
+        </div>
+
+        <!-- Line -->
+        <div class="line-container"></div>
+
+        <!-- Step 2 -->
+        <div class="booth-step">
+            <div class="step-content">
+                <div class="booth-icon">
+                    <img src="/Assets/step2-snap.png" alt="Snap Icon" style="opacity: 0.5;" />
+                </div>
+                <p class="step-label" style="opacity: 0.5;">Snap</p>
+            </div>
+        </div>
+
+        <!-- Line -->
+        <div class="line-container"></div>
+
+        <!-- Step 3 -->
+        <div class="booth-step">
+            <div class="step-content">
+                <div class="booth-icon">
+                    <img src="/Assets/step3-customize.png" alt="Customize Icon" />
+                </div>
+                <p class="step-label">Customize</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customize -->
+    <section class="customize-photo">
+        <!-- Title and step indicators -->
+        <div class="customize-header">
+            <h4>Time to style your snap</h4>
+        </div>
+
+        <div class="customize-container">
+            <!-- Left: Photo Strip Preview -->
+            <div class="photo-str">
+                <canvas class="strip-fr" id="strip-fr"></canvas>
+            </div>
+
+            <!-- Right: Options -->
+            <div class="customize-options">
+
+                <!-- Filter -->
+                <div class="option-group">
+                    <h3>Vintage Vibe Filters</h3>
+                    <div class="options-row">
+                        <div class="choices" onclick="setFilter(0)">
+                            <img src="@Url.Content("~/Assets/none.png")" alt="icon" />
+                            <div class="tooltip">No Filter</div>
+                        </div>
+                        <div class="choices" onclick="setFilter(1)">
+                            <img src="@Url.Content("~/Assets/retro-pop icon.png")" alt="icon" />
+                            <div class="tooltip">Retro Pop</div>
+                        </div>
+                        <div class="choices" onclick="setFilter(2)">
+                            <img src="@Url.Content("~/Assets/vintage-film icon.png")" alt="icon" />
+                            <div class="tooltip">Vintage  Film</div>
+                        </div>
+                        <div class="choices" onclick="setFilter(3)">
+                            <img src="@Url.Content("~/Assets/retro-sunset icon.png")" alt="icon" />
+                            <div class="tooltip">Retro Sunset</div>
+                        </div>
+                        <div class="choices" onclick="setFilter(4)">
+                            <img src="@Url.Content("~/Assets/mint-fade icon.png")" alt="icon" />
+                            <div class="tooltip">Mint Fade</div>
+                        </div>
+                        <div class="choices" onclick="setFilter(5)">
+                            <img src="@Url.Content("~/Assets/moody-vinyl icon.png")" alt="icon" />
+                            <div class="tooltip">Moody Vinyl</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frame colors -->
+                <div class="option-group">
+                    <h3>Retro Frame Colors</h3>
+                    <div class="options-row">
+                        <div class="choices" onclick="setFrameColor('#BA5E62')">
+                            <img src="@Url.Content("~/Assets/mutedrose.png")" alt="icon" />
+                            <div class="tooltip">Muted Rose</div>
+                        </div>
+                        <div class="choices" onclick="setFrameColor('#EFA5A6')">
+                            <img src="@Url.Content("~/Assets/lightpink.png")" alt="icon" />
+                            <div class="tooltip">Light Pink</div>
+                        </div>
+                        <div class="choices" onclick="setFrameColor('#F9E5DA')">
+                            <img src="@Url.Content("~/Assets/softpeach.png")" alt="icon" />
+                            <div class="tooltip">Soft Peach</div>
+                        </div>
+                        <div class="choices" onclick="setFrameColor('#69AFAD')">
+                            <img src="@Url.Content("~/Assets/coolmint.png")" alt="icon" />
+                            <div class="tooltip">Cool Mint</div>
+                        </div>
+                        <div class="choices" onclick="setFrameColor('#354E52')">
+                            <img src="@Url.Content("~/Assets/darkteal.png")" alt="icon" />
+                            <div class="tooltip">Dark Teal</div>
+                        </div>
+                        <div class="choices" onclick="setFrameColor('#1E1E1E')">
+                            <img src="@Url.Content("~/Assets/classblack.png")" alt="icon" />
+                            <div class="tooltip">Classic Black</div>
+                        </div>
+                    </div>
+
+                    <div class="options-row">
+                        <div class="choices" onclick="setFrameColor('#97C78E')">
+                            <img src="@Url.Content("~/Assets/lightgreen.png")" alt="icon" />
+                            <div class="tooltip">Light Green</div>
+                        </div>
+                        <div class="choices" onclick="setFrameColor('#CC6B49')">
+                            <img src="@Url.Content("~/Assets/burntorange.png")" alt="icon" />
+                            <div class="tooltip">Burnt Orange</div>
+                        </div>
+                        <div class="choices" onclick="setFrameColor('#D2A24C')">
+                            <img src="@Url.Content("~/Assets/warmgold.png")" alt="icon" />
+                            <div class="tooltip">Warm Gold</div>
+                        </div>
+                        <div class="choices" onclick="setFrameColor('#ECE6C2')">
+                            <img src="@Url.Content("~/Assets/palebeige.png")" alt="icon" />
+                            <div class="tooltip">Pale Beige</div>
+                        </div>
+                        <div class="choices" onclick="setFrameColor('#6F5643')">
+                            <img src="@Url.Content("~/Assets/coffeebrown.png")" alt="icon" />
+                            <div class="tooltip">Coffee Brown</div>
+                        </div>
+                        <div class="choices" onclick="setFrameColor('#C2DFF3')">
+                            <img src="@Url.Content("~/Assets/babyblue.png")" alt="icon" />
+                            <div class="tooltip">Baby Blue</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stickers -->
+                <div class="option-group">
+                    <h3>Retro Pop Stickers</h3>
+                    <div class="options-row">
+                        <div class="choices" onclick="setBackSticker(0); setFrontSticker(0)">
+                            <img src="@Url.Content("~/Assets/none.png")" alt="none" />
+                            <div class="tooltip">No Sticker</div>
+                        </div>
+                        <div class="choices" onclick="setBackSticker(1); setFrontSticker(1)">
+                            <img src="@Url.Content("~/Assets/retclass icon.png")" alt="retclass" />
+                            <div class="tooltip">Retro Classic</div>
+                        </div>
+                        <div class="choices" onclick="setBackSticker(2); setFrontSticker(2)">
+                            <img src="@Url.Content("~/Assets/ret90s icon.png")" alt="icon" />
+                            <div class="tooltip">Retro 90s</div>
+                        </div>
+                        <div class="choices" onclick="setBackSticker(3); setFrontSticker(3)">
+                            <img src="@Url.Content("~/Assets/retpop icon.png")" alt="icon" />
+                            <div class="tooltip">Retro Pop</div>
+                        </div>
+                        <div class="choices" onclick="setBackSticker(4); setFrontSticker(4)">
+                            <img src="@Url.Content("~/Assets/retmusic icon.png")" alt="icon" />
+                            <div class="tooltip">Retro Music</div>
+                        </div>
+                        <div class="choices" onclick="setBackSticker(5); setFrontSticker(5)">
+                            <img src="@Url.Content("~/Assets/retgames icon.png")" alt="icon" />
+                            <div class="tooltip">Retro Games</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timestamp -->
+                <div class="option-group">
+                    <h3>Timestamp</h3>
+                    <label class="switch">
+                        <input type="checkbox" id="timestampToggle" />
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- Button -->
+                <div class="option-actions">
+                    <button class="btn-1" id="download">Download</button>
+                    <button class="btn-1" id="uploadBtn">Upload</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    window.layoutType = 2;
+    window.layoutFolder = "1x2";
+</script>
+
+@section Scripts {
+    <script src="~/js/customize.js" asp-append-version="true"></script>
+}
