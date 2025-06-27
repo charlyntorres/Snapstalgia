@@ -144,7 +144,8 @@ function renderCanvas() {
     }
 
     function finalizeDownload() {
-        document.getElementById("download").href = canvas.toDataURL("image/png");
+        const downloadLink = document.getElementById("download");
+        downloadLink.href = canvas.toDataURL("image/png");
     }
 }
 
