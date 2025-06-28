@@ -1730,3 +1730,362 @@ video {
         justify-content: center;
         color: var(--color-accent);
     }
+
+/*-------------------------------------------------------------------------*/
+/* Profile Page  */
+.profile-page {
+    background-color: #F9E5DA;
+    min-height: 100vh;
+    padding: 50px 100px;
+    box-sizing: border-box;
+    font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+.profile-container {
+    display: flex;
+    gap: 100px;
+    align-items: flex-start;
+}
+
+.account-details {
+    width: 412px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.account-title {
+    font-size: 50px;
+    font-family: 'TR Candice', cursive;
+    color: #BA5E62;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.account-info {
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.label {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1E1E1E;
+}
+
+.value {
+    font-size: 20px;
+    font-weight: 500;
+    color: #1E1E1E;
+}
+
+.btn-logout {
+    width: 120px;
+    height: 45px;
+    padding: 12px 39px;
+    background-color: #69AFAD;
+    border-radius: 50px;
+    border: none;
+    color: #F9E5DA;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+    .btn-logout:hover {
+        background-color: #354E52;
+    }
+
+.photostrips-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.strip-title {
+    font-size: 40px;
+    font-family: 'TR Candice', cursive;
+    color: #BA5E62;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+    text-align: left;
+    transition: color 0.3s;
+    cursor: pointer;
+}
+
+.photostrip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.strip-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.strip-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1E1E1E;
+    transition: color 0.3s;
+    cursor: pointer;
+}
+
+    .strip-name:hover {
+        color: #BA5E62;
+    }
+
+.strip-date {
+    font-size: 16px;
+    font-weight: 400;
+    color: #1E1E1E;
+}
+
+.strip-actions {
+    display: flex;
+    gap: 20px;
+}
+
+.btn-download,
+.btn-delete {
+    height: 40px;
+    padding: 12px 39px;
+    border-radius: 50px;
+    border: none;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, color 0.3s, border 0.3s;
+}
+
+.btn-download {
+    background-color: #69AFAD;
+    color: #F9E5DA;
+}
+
+    .btn-download:hover {
+        background-color: #354E52;
+        color: #F9E5DA;
+    }
+
+.btn-delete {
+    background-color: #BA5E62;
+    color: white;
+}
+
+    .btn-delete:hover {
+        background-color: #EFA5A6;
+        color: #1E1E1E;
+    }
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/*-------------------------------------------------------------------------*/
+/* Main Photostrip View Wrapper */
+.photostripview-wrapper {
+    width: 100%;
+    padding: 80px 0 120px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.photostrip-view-page {
+    background-color: #F9E5DA;
+    padding: 60px 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+.photostrip-view-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 120px;
+    width: 100%;
+}
+
+.photostrip-view-box {
+    width: 1213px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.photostrip-view-content {
+    width: 1100px;
+    padding: 40px 50px 100px;
+    background-color: #EFA5A6;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.back-button {
+    align-self: flex-start;
+}
+
+    .back-button img {
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+    }
+
+.photostrip-main {
+    padding-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+}
+
+.snapstalgia-title {
+    font-family: 'TR Candice', cursive;
+    font-size: 45px;
+    color: #F9E5DA;
+    text-align: center;
+    text-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.photostrip-image-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.photostrip-image {
+    width: 275px;
+    height: 830px;
+    object-fit: cover;
+}
+
+/*-----------------------------------------*/
+/* ===== Modal Base ===== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(30, 30, 30, 0.5);
+    justify-content: center;
+    align-items: center;
+    font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+.modal-content {
+    background-color: #F9E5DA;
+    padding: 40px 60px;
+    border-radius: 20px;
+    outline: 3px solid #BA5E62;
+    outline-offset: -3px;
+    box-shadow: 4px 4px 10px rgba(30, 30, 30, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 480px;
+    gap: 25px;
+    text-align: center;
+}
+
+.modal-icon {
+    width: 60px;
+    height: 60px;
+}
+
+.modal-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1E1E1E;
+}
+
+.modal-subtitle {
+    font-size: 18px;
+    font-weight: 500;
+    color: #1E1E1E;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+}
+
+.btn-cancel {
+    background-color: #828282;
+    color: #F9E5DA;
+    font-weight: 700;
+    border: none;
+    padding: 12px 39px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-cancel:hover {
+        background-color: rgba(30, 30, 30, 0.8); 
+    }
+
+.btn-confirm {
+    background-color: #BA5E62;
+    color: white;
+    font-weight: 700;
+    border: none;
+    padding: 9px 28px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+    .btn-confirm:hover {
+        background-color: #EFA5A6;
+        color: rgba(30, 30, 30, 0.8);
+    }
+
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 35px;
+    height: 35px;
+    font-size: 22px;
+    color: #828282;
+    cursor: pointer;
+    /*circle */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    /* Circle outline */
+    border: 2px solid #828282;
+    background-color: transparent;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+
+

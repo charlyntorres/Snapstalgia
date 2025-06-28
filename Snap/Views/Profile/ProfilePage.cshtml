@@ -2,3 +2,132 @@
 @{
     ViewData["Title"] = "Profile";
 }
+
+<div class="profile-page">
+    <div class="profile-container">
+        <!-- Account Details Section -->
+        <div class="account-details">
+            <h2 class="account-title">Account Details</h2>
+            <div class="account-info">
+                <p><span class="label">Username: </span><span class="value">caleb_john</span></p>
+                <p><span class="label">Email: </span><span class="value">cjsb07@gmail.com</span></p>
+                <button class="btn-logout" onclick="openLogoutModal()">Logout</button>
+            </div>
+        </div>
+
+        <!-- Photo Strips Section -->
+        <div class="photostrips-section">
+            <h2 class="strip-title">Your Photo Strips</h2>
+
+            @for (int i = 1; i <= 5; i++)
+            {
+                <div class="photostrip">
+                    <div class="strip-meta">
+                        <a asp-controller="Profile" asp-action="PhotostripView" class="strip-name hoverable">Photostrip @i</a>
+                        <div class="strip-date">@(new[] { "June 17, 2025", "June 14, 2025", "June 01, 2025", "May 30, 2025", "May 11, 2025" }[i - 1])</div>
+                    </div>
+                    <div class="strip-actions">
+                        <button class="btn-download">Download</button>
+                        <button class="btn-delete" onclick="openDeleteModal()">Delete</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Logout Confirmation Modal -->
+<div id="logoutModal" class="modal">
+    <div class="modal-content">
+        <img src="~/Assets/profile-question.png" alt="Question Icon" class="modal-icon">
+        <div class="modal-title">Are you sure?</div>
+        <div class="modal-subtitle">You’ll need to sign in again to access your saved photostrips.</div>
+        <div class="modal-buttons">
+            <button class="btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+            <button class="btn-confirm" onclick="logoutUser()">Logout</button>
+        </div>
+        <div class="modal-close" onclick="closeLogoutModal()">×</div>
+    </div>
+</div>
+
+<!-- Logout Success Modal -->
+<div id="logoutSuccessModal" class="modal">
+    <div class="modal-content">
+        <img src="~/Assets/profile-check.png" alt="Check Icon" class="modal-icon">
+        <div class="modal-title">Logout successfully.</div>
+        <div class="modal-subtitle">See you again soon!</div>
+        <div class="modal-buttons">
+            <button class="btn-confirm" onclick="redirectToHome()">Done</button>
+        </div>
+        <div class="modal-close" onclick="closeLogoutSuccessModal()">×</div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <img src="~/Assets/profile-question.png" alt="Question Icon" class="modal-icon">
+        <div class="modal-title">Are you sure?</div>
+        <div class="modal-subtitle">This action cannot be undone.</div>
+        <div class="modal-buttons">
+            <button class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+            <button class="btn-confirm" onclick="confirmDelete()">Delete</button>
+        </div>
+        <div class="modal-close" onclick="closeDeleteModal()">×</div>
+    </div>
+</div>
+
+<!-- Delete Success Modal -->
+<div id="deleteSuccessModal" class="modal">
+    <div class="modal-content">
+        <img src="~/Assets/profile-check.png" alt="Check Icon" class="modal-icon">
+        <div class="modal-title">Deleted successfully.</div>
+        <div class="modal-subtitle">Your photostrip has been removed from your profile.</div>
+        <div class="modal-buttons">
+            <button class="btn-confirm" onclick="closeDeleteSuccessModal()">Done</button>
+        </div>
+        <div class="modal-close" onclick="closeDeleteSuccessModal()">×</div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function openLogoutModal() {
+            document.getElementById("logoutModal").style.display = "flex";
+        }
+
+        function closeLogoutModal() {
+            document.getElementById("logoutModal").style.display = "none";
+        }
+
+        function logoutUser() {
+            closeLogoutModal();
+            document.getElementById("logoutSuccessModal").style.display = "flex";
+        }
+
+        function closeLogoutSuccessModal() {
+            document.getElementById("logoutSuccessModal").style.display = "none";
+        }
+
+        function redirectToHome() {
+            window.location.href = '/';
+        }
+
+        function openDeleteModal() {
+            document.getElementById("deleteModal").style.display = "flex";
+        }
+
+        function closeDeleteModal() {
+            document.getElementById("deleteModal").style.display = "none";
+        }
+
+        function confirmDelete() {
+            closeDeleteModal();
+            document.getElementById("deleteSuccessModal").style.display = "flex";
+        }
+
+        function closeDeleteSuccessModal() {
+            document.getElementById("deleteSuccessModal").style.display = "none";
+        }
+    </script>
+}
