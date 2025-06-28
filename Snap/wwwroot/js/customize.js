@@ -39,16 +39,57 @@ function setFrontSticker(id) {
     renderCanvas();
 }
 
-// Filter styles -------------------- (No Grains and Vignette yet) -------------------- to be updated after
+// Filter styles
 function getCanvasFilterById(id) {
     switch (id) {
-        case 1: return "contrast(130%) saturate(150%) brightness(110%) hue-rotate(15deg)";
-        case 2: return "sepia(100%) saturate(85%) contrast(90%) brightness(105%) hue-rotate(15deg)";
-        case 3: return "hue-rotate(25deg) saturate(180%) brightness(105%) contrast(120%)";
-        case 4: return "brightness(100%) contrast(90%) saturate(124%) hue-rotate(10deg)";
-        case 5: return "grayscale(30%) brightness(80%) contrast(115%)";
+        case 1: return "contrast(130%) saturate(150%) brightness(110%) hue-rotate(15deg)"; // Retro Pop
+        case 2: return "sepia(100%) saturate(85%) contrast(90%) brightness(105%) hue-rotate(15deg)"; // Vintage Film
+        case 3: return "hue-rotate(25deg) saturate(180%) contrast(120%) brightness(105%)"; // Retro Sunset
+        case 4: return "brightness(100%) contrast(90%) saturate(124%) hue-rotate(-10deg)"; // Polaroid Hush
+        case 5: return "saturate(70%) contrast(150%) brightness(95%)"; // Moody Vinyl
         default: return "none";
     }
+}
+
+// Solid overlay
+function applySolidOverlayToArea(ctx, x, y, width, height, rgbaColor) {
+    ctx.fillStyle = rgbaColor;
+    ctx.fillRect(x, y, width, height);
+}
+
+// Gradient overlay for individual photo
+function applyGradientOverlayToArea(ctx, x, y, width, height, colorStops) {
+    const gradient = ctx.createLinearGradient(x, y, x, y + height);
+    colorStops.forEach(stop => gradient.addColorStop(stop.offset, stop.color));
+    ctx.fillStyle = gradient;
+    ctx.fillRect(x, y, width, height);
+}
+
+// Vignette overlay for individual photo
+function applyVignetteOverlayToArea(ctx, x, y, width, height, opacity = 0.4) {
+    const centerX = x + width / 2;
+    const centerY = y + height / 2;
+    const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, width * 0.75);
+    gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+    gradient.addColorStop(1, `rgba(0, 0, 0, ${opacity})`);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(x, y, width, height);
+}
+
+// Add grain Noise effect
+function addGrainNoiseToArea(ctx, x, y, width, height, intensity = 0.05) {
+    const imageData = ctx.getImageData(x, y, width, height);
+    const data = imageData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+        const noise = (Math.random() * 2 - 1) * 255 * intensity;
+
+        data[i] = Math.min(255, Math.max(0, data[i] + noise));     // R
+        data[i + 1] = Math.min(255, Math.max(0, data[i + 1] + noise)); // G
+        data[i + 2] = Math.min(255, Math.max(0, data[i + 2] + noise)); // B
+    }
+
+    ctx.putImageData(imageData, x, y);
 }
 
 // Timestamp toggle
@@ -110,8 +151,30 @@ function renderCanvas() {
                 ctx.drawImage(img, sidePadding, offsetY, photoWidth, photoHeight);
                 ctx.filter = "none";
 
+                // Apply overlay filter effects individually per photo (solid color, gradient color, vignette, and grain noise effect)
+                if (selectedFilterId === 1) {
+                    applySolidOverlayToArea(ctx, sidePadding, offsetY, photoWidth, photoHeight, 'rgba(255, 204, 153, 0.2)');
+                    addGrainNoiseToArea(ctx, sidePadding, offsetY, photoWidth, photoHeight, 0.03);
+                } else if (selectedFilterId === 2) {
+                    applyVignetteOverlayToArea(ctx, sidePadding, offsetY, photoWidth, photoHeight, 0.4);
+                    addGrainNoiseToArea(ctx, sidePadding, offsetY, photoWidth, photoHeight, 0.015);
+                } else if (selectedFilterId === 3) {
+                    applyGradientOverlayToArea(ctx, sidePadding, offsetY, photoWidth, photoHeight, [
+                        { offset: 0, color: 'rgba(255, 183, 76, 0.27)' },
+                        { offset: 1, color: 'rgba(255, 94, 151, 0.27)' }
+                    ]);
+                } else if (selectedFilterId === 4) {
+                    applySolidOverlayToArea(ctx, sidePadding, offsetY, photoWidth, photoHeight, 'rgba(180, 255, 200, 0.1)');
+                    applyVignetteOverlayToArea(ctx, sidePadding, offsetY, photoWidth, photoHeight, 0.31);
+                    addGrainNoiseToArea(ctx, sidePadding, offsetY, photoWidth, photoHeight, 0.03);
+                } else if (selectedFilterId === 5) {
+                    applyVignetteOverlayToArea(ctx, sidePadding, offsetY, photoWidth, photoHeight, 0.4);
+                    addGrainNoiseToArea(ctx, sidePadding, offsetY, photoWidth, photoHeight, 0.02);
+                }
+
                 loaded++;
                 if (loaded === layoutType) {
+
                     // Brand name
                     ctx.fillStyle = "#F9E5DA";
                     ctx.font = "300 16px 'TR Candice', cursive";
@@ -130,6 +193,7 @@ function renderCanvas() {
         });
     }
 
+    // Draw front sticker
     function drawFrontSticker() {
         if (selectedStickerFrontId !== 0) {
             const frontSticker = new Image();
@@ -143,6 +207,7 @@ function renderCanvas() {
         }
     }
 
+    //download function
     function finalizeDownload() {
         const downloadLink = document.getElementById("download");
         downloadLink.href = canvas.toDataURL("image/png");
