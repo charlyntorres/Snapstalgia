@@ -1,14 +1,13 @@
 ﻿#nullable disable
 
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using Snap.Areas.Identity.Data;
+using Snap.Areas.Identity.Data.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -54,6 +53,9 @@ namespace Snap.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            [StringLength(20, MinimumLength = 3, ErrorMessage = "Username must be between 3 and 20 characters.")]
+            [RegularExpression(@"^(?!.*[_.-]{2})[a-zA-Z0-9](?!.*[_.-]{2})[a-zA-Z0-9_.-]*[a-zA-Z0-9]$",
+                ErrorMessage = "Username can contain letters, numbers, '.', '_', '-', but can't start/end with them or have them consecutively.")]
             [Display(Name = "Username")]
             public string Username { get; set; }
 
@@ -92,6 +94,22 @@ namespace Snap.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                // Check if the email already exists
+                var existingUserByEmail = await _userManager.FindByEmailAsync(Input.Email);
+                if (existingUserByEmail != null)
+                {
+                    ModelState.AddModelError(string.Empty, "Email already exists. Please try logging in or use a different email address.");
+                    return Page();
+                }
+
+                // Check if the username already exists
+                var existingUserByUsername = await _userManager.FindByNameAsync(Input.Username);
+                if (existingUserByUsername != null)
+                {
+                    ModelState.AddModelError(string.Empty, "Username already exists. Please choose a different one.");
+                    return Page();
+                }
+
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
@@ -132,7 +150,6 @@ namespace Snap.Areas.Identity.Pages.Account
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return Page();
         }
 
