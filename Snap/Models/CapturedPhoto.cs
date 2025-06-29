@@ -8,7 +8,7 @@ namespace Snap.Models
         public DateTime CapturedAt { get; set; }    
         public string SessionId { get; set; }       
         public int Sequence { get; set; }           
-        public string LayoutType { get; set; }      
+        public int LayoutType { get; set; }      
         public int Width { get; set; }              
         public int Height { get; set; }             
     }

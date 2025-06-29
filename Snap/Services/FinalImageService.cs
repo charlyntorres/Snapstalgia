@@ -13,15 +13,22 @@ using Snap.Helpers;
 using SixLabors.ImageSharp.Processing.Processors.Filters;
 using SixLabors.ImageSharp.Processing.Processors;
 using Snap.Helpers;
+using Snap.Areas.Identity.Data.Data;
 
 namespace Snap.Services
 {
     public class FinalImageService : IFinalImageService
     {
         private readonly string TempFolder = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "temp");
-        private readonly string FinalFolder = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "final");        
+        private readonly string FinalFolder = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "final");
+        private readonly ApplicationDbContext _context;
 
-        public async Task<string> GenerateFinalImageAsync(FinalImageRequest request)
+        public FinalImageService(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<string> GenerateFinalImageAsync(FinalImageRequest request, string userId)
         {
             if (!Directory.Exists(FinalFolder))
                 Directory.CreateDirectory(FinalFolder);
@@ -30,9 +37,7 @@ namespace Snap.Services
             if (!Directory.Exists(sessionFolder))
                 throw new Exception("Session images folder not found.");
 
-            var imageFiles = Directory.GetFiles(sessionFolder, "*.png")
-                .OrderBy(f => f)
-                .ToList();
+            var imageFiles = Directory.GetFiles(sessionFolder, "*.png").OrderBy(f => f).ToList();
 
             var (rows, cols) = LayoutPresets.GetGrid(request.LayoutType);
             var expectedCount = rows * cols;
@@ -40,17 +45,12 @@ namespace Snap.Services
             if (imageFiles.Count < expectedCount)
                 throw new Exception($"Not enough images for layout. Expected {expectedCount}, found {imageFiles.Count}.");
 
-            var filterId = request.FilterId >> 0;
-
-            // Load and apply filter
-            var images = imageFiles.Take(expectedCount)
-                .Select(path =>
-                {
-                    var image = Image.Load<Rgba32>(path);
-                    image.ApplyFilter((int)filterId);
-                    return image;
-                })
-                .ToList();
+            var images = imageFiles.Take(expectedCount).Select(path =>
+            {
+                var image = Image.Load<Rgba32>(path);
+                image.ApplyFilter(request.FilterId ?? 0);
+                return image;
+            }).ToList();
 
             int photoWidth = images[0].Width;
             int photoHeight = images[0].Height;
@@ -63,18 +63,7 @@ namespace Snap.Services
             // Frame color
             var allowedColors = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
-                "BA5E62",   // Muted rose
-                "EFA5A6",   // Light pink
-                "F9E5DA",   // Soft peach
-                "69AFAD",   // Cool mint
-                "354E52",   // Dark teal
-                "1E1E1E",   // Classic black
-                "97C78E",   // Light green
-                "CC6B49",   // Burnt orange
-                "D2A24C",   // Warm gold
-                "ECE6C2",   // Pale beige
-                "6F5643",   // Coffee brown
-                "C2DFF3"    // Baby blue
+                "BA5E62", "EFA5A6", "F9E5DA", "69AFAD", "354E52", "1E1E1E", "97C78E", "CC6B49", "D2A24C", "ECE6C2", "6F5643", "C2DFF3"
             };
 
             var inputColor = request.FrameColor?.Trim().TrimStart('#').ToUpperInvariant();
@@ -83,21 +72,20 @@ namespace Snap.Services
                 : "BA5E62";
 
             var frameColor = Color.ParseHex("#" + colorHex);
-            var textColor = GetLuminance(frameColor) < 0.5 ? Color.ParseHex("F9E5DA") : Color.ParseHex("354E52");            
+            var textColor = GetLuminance(frameColor) < 0.5 ? Color.ParseHex("F9E5DA") : Color.ParseHex("354E52");
 
             using var finalImage = new Image<Rgba32>(finalWidth, finalHeight);
             finalImage.Mutate(ctx => ctx.Clear(frameColor));
 
-            // Stickers
             string behindPath = null;
             string frontPath = null;
 
-            // Behind overlay
+            // Behind Sticker
             if (request.StickerId.HasValue && StickerPresets.TryGetStickerPaths(request.LayoutType, request.StickerId, out behindPath, out frontPath))
             {
                 if (!string.IsNullOrWhiteSpace(behindPath))
                 {
-                    var behindFullPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", behindPath);
+                    var behindFullPath = System.IO.Path.Combine("wwwroot", behindPath);
                     if (File.Exists(behindFullPath))
                     {
                         using var behindOverlay = Image.Load<Rgba32>(behindFullPath);
@@ -107,23 +95,19 @@ namespace Snap.Services
                 }
             }
 
-            // Photo grid
+            // Paste photos
             for (int i = 0; i < images.Count; i++)
             {
                 int x = leftMargin;
                 int y = topMargin + i * (photoHeight + spacing);
-
-                // Apply filter
-                images[i].ApplyFilter((int)request.FilterId);
-
                 finalImage.Mutate(ctx => ctx.DrawImage(images[i], new Point(x, y), 1f));
                 images[i].Dispose();
             }
 
-            // Front overlay
+            // Front Sticker
             if (!string.IsNullOrWhiteSpace(frontPath))
             {
-                var frontFullPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", frontPath);
+                var frontFullPath = System.IO.Path.Combine("wwwroot", frontPath);
                 if (File.Exists(frontFullPath))
                 {
                     using var frontOverlay = Image.Load<Rgba32>(frontFullPath);
@@ -132,42 +116,46 @@ namespace Snap.Services
                 }
             }
 
-            // Brand label
-            var brand = "SnapStalgia";
-            var brandFontPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Assets", "Fonts", "TR Candice.TTF");
-            var brandFontLabel = TryLoadFont(brandFontPath, 16);
-            var brandSize = TextMeasurer.MeasureSize(brand, new TextOptions(brandFontLabel));
+            // Brand Text
+            var brandFont = TryLoadFont(System.IO.Path.Combine("wwwroot", "Assets", "Fonts", "TR Candice.TTF"), 16);
+            var brandText = "SnapStalgia";
+            var brandSize = TextMeasurer.MeasureSize(brandText, new TextOptions(brandFont));
             var brandX = (finalWidth - brandSize.Width) / 2;
             var brandY = finalHeight - 43;
 
-            finalImage.Mutate(ctx =>
-            {
-                ctx.DrawText(brand, brandFontLabel, textColor, new PointF(brandX, brandY));
-            });           
+            finalImage.Mutate(ctx => ctx.DrawText(brandText, brandFont, textColor, new PointF(brandX, brandY)));
 
             // Timestamp
             if (request.IncludeTimestamp)
             {
                 var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                var timeFontPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Assets", "Fonts", "BricolageGrotesque-Regular.ttf");
-                var font = TryLoadFont(timeFontPath, 8);
+                var timeFont = TryLoadFont(System.IO.Path.Combine("wwwroot", "Assets", "Fonts", "BricolageGrotesque-Regular.ttf"), 8);
+                var size = TextMeasurer.MeasureSize(timestamp, new TextOptions(timeFont));
+                var x = (finalWidth - size.Width) / 2;
+                var y = finalHeight - 23;
 
-                var textSize = TextMeasurer.MeasureSize(timestamp, new TextOptions(font));
-                var timestampX = (finalWidth - textSize.Width) / 2;
-                var timestampY = finalHeight - 23;
-
-                finalImage.Mutate(ctx =>
-                {
-                    ctx.DrawText(timestamp, font, textColor, new PointF(timestampX, timestampY));
-                });
+                finalImage.Mutate(ctx => ctx.DrawText(timestamp, timeFont, textColor, new PointF(x, y)));
             }
 
-            // Save
-            var fileName = $"{request.SessionId}_final_{DateTime.Now:yyyyMMdd_HHmmss}.png";
-            var filePath = System.IO.Path.Combine(FinalFolder, fileName);
-            await finalImage.SaveAsPngAsync(filePath);
+            var fileName = $"{request.SessionId}_final_{DateTime.UtcNow:yyyyMMdd_HHmmss}.png";
+            var finalPath = System.IO.Path.Combine(FinalFolder, fileName);
+            await finalImage.SaveAsPngAsync(finalPath);
 
-            return $"/images/final/{fileName}";
+            // Save record to DB
+            var photo = new Photo
+            {
+                UserId = userId,
+                FilePath = "/images/final/" + fileName,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Photos.Add(photo);
+            await _context.SaveChangesAsync();
+            Console.WriteLine("Saving photo for userId: " + userId);
+            Console.WriteLine("Final image path: " + "/images/final/" + fileName);
+
+
+            return photo.FilePath;
         }
 
         private static Font TryLoadFont(string fontPath, float size)
