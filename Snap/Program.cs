@@ -29,6 +29,9 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddScoped<FinalImageService>();
+builder.Services.AddScoped<IFinalImageService, FinalImageService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

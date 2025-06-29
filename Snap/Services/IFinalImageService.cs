@@ -5,6 +5,7 @@ namespace Snap.Services
 {
     public interface IFinalImageService
     {
-        Task<string> GenerateFinalImageAsync(FinalImageRequest request);
-    }    
+        Task<string> GenerateFinalImageAsync(FinalImageRequest request, string userId);
+    }
+
 }

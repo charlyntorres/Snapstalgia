@@ -52,7 +52,7 @@
         <!-- Layout Options -->
         <div class="cl-images">
             <div class="cl-a">
-                <a href="/ChooseLayout/TakeAPhotoTwo">
+                <a href="/ChooseLayout/TakeAPhotoTwo" onclick="localStorage.setItem('layoutType', '2');">
                     <!--sample only to take a 2 photo page-->
                     <img src="@Url.Content("~/Assets/cl-a.png")" alt="2-photo" />
                 </a>
@@ -61,7 +61,7 @@
             </div>
 
             <div class="cl-b">
-                <a href="/ChooseLayout/TakeAPhotoThree">
+                <a href="/ChooseLayout/TakeAPhotoThree" onclick="localStorage.setItem('layoutType', '3');">
                     <!--sample only to take a 3 photo page-->
                     <img src="@Url.Content("~/Assets/cl-b.png")" alt="3-photo" />
                 </a>
@@ -70,7 +70,7 @@
             </div>
 
             <div class="cl-c">
-                <a href="/ChooseLayout/TakeAPhotoFour">
+                <a href="/ChooseLayout/TakeAPhotoFour" onclick="localStorage.setItem('layoutType', '4');">
                     <!--sample only to take a 4 photo page-->
                     <img src="@Url.Content("~/Assets/cl-c.png")" alt="4-photo" />
                 </a>

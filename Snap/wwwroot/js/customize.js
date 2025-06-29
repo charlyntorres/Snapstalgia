@@ -1,5 +1,6 @@
 ﻿// Shared JavaScript for 1x2, 1x3, 1x4 customization pages
-
+const layoutType = parseInt(localStorage.getItem("layoutType"), 10);
+//const layoutFolder = layoutType === 2 ? "2" : layoutType === 3 ? "3" : "4";
 const canvas = document.getElementById("strip-fr");
 const ctx = canvas.getContext("2d");
 
@@ -19,23 +20,26 @@ let includeTimestamp = false;
 // Frame color selection
 function setFrameColor(color) {
     selectedFrameColor = color;
+    localStorage.setItem("frameColor", color);
     renderCanvas();
 }
 
 // Filter selection
 function setFilter(id) {
     selectedFilterId = id;
-    console.log("Selected filter:", id);
+    localStorage.setItem("filterId", id);
     renderCanvas();
 }
 
 // Sticker selection
 function setBackSticker(id) {
     selectedStickerBackId = id;
+    localStorage.setItem("stickerId", id);
     renderCanvas();
 }
 function setFrontSticker(id) {
     selectedStickerFrontId = id;
+    localStorage.setItem("stickerId", id);
     renderCanvas();
 }
 
@@ -97,6 +101,7 @@ const timestampToggle = document.getElementById("timestampToggle");
 if (timestampToggle) {
     timestampToggle.addEventListener("change", function () {
         includeTimestamp = this.checked;
+        localStorage.setItem("includeTimestamp", includeTimestamp.toString());
         renderCanvas();
     });
 }
@@ -216,3 +221,59 @@ function renderCanvas() {
 
 // Initial draw
 renderCanvas();
+
+document.getElementById("uploadBtn").addEventListener("click", async () => {
+    try {
+        const sessionId = localStorage.getItem("sessionId");
+        //const layoutType = localStorage.getItem("layoutType");
+        const layoutType = parseInt(localStorage.getItem("layoutType"), 10);
+        const filterId = parseInt(localStorage.getItem("filterId")) || 0;
+        const stickerId = localStorage.getItem("stickerId") ? parseInt(localStorage.getItem("stickerId")) : null;
+        const frameColor = localStorage.getItem("frameColor") || "";
+        const includeTimestamp = localStorage.getItem("includeTimestamp") === "true";
+
+        console.log("Uploading with payload:", {
+            sessionId,
+            layoutType,
+            filterId,
+            stickerId,
+            frameColor,
+            includeTimestamp,
+        });
+
+        if (!sessionId || !layoutType) {
+            alert("Missing session or layout information.");
+            return;
+        }
+
+        const payload = {
+            SessionId: sessionId,
+            LayoutType: layoutType,
+            FilterId: filterId,
+            StickerId: stickerId,
+            FrameColor: frameColor,
+            IncludeTimestamp: includeTimestamp
+        };
+
+        const response = await fetch("/api/photo/compile", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            const error = await response.text();
+            alert("Failed to upload: " + error);
+            return;
+        }
+
+        const result = await response.json();
+        alert("Photo uploaded and saved successfully!");
+
+        // Optionally update UI or redirect here
+    } catch (err) {
+        alert("Unexpected error: " + err.message);
+    }
+});

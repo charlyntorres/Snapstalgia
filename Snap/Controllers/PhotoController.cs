@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using Snap.Areas.Identity.Data.Data;
 using Snap.Helpers;
 using Snap.Models;
 using Snap.Services;
@@ -21,10 +23,12 @@ namespace Snap.Controllers
     public class PhotoController : ControllerBase
     {
         private readonly IFinalImageService _finalImageService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PhotoController(IFinalImageService finalImageService)
+        public PhotoController(IFinalImageService finalImageService, UserManager<ApplicationUser> userManager)
         {
             _finalImageService = finalImageService;
+            _userManager = userManager;
         }
 
         // POST api/photo/upload
@@ -35,8 +39,10 @@ namespace Snap.Controllers
                 return BadRequest(new { message = "SessionId and photo file are required." });
 
             try
-            {                
+            {
                 var (expectedRows, expectedCols) = LayoutPresets.GetGrid(request.LayoutType);
+                //int layoutTypeNum = request.LayoutType;                // Assumes it's "2", "3", "4"
+                //var (expectedRows, expectedCols) = LayoutPresets.GetGrid(layoutTypeNum);
 
                 var tempSessionFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "temp", request.SessionId);
                 if (!Directory.Exists(tempSessionFolder))
@@ -81,12 +87,17 @@ namespace Snap.Controllers
 
         // POST api/photo/compile
         [HttpPost("compile")]
-        public async Task<IActionResult> CompileAndEdit([FromForm] EditPhotoRequest request)
+        public async Task<IActionResult> CompileAndEdit([FromBody] EditPhotoRequest request)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(request.SessionId) || string.IsNullOrWhiteSpace(request.LayoutType))
+                //if (string.IsNullOrWhiteSpace(request.SessionId) || string.IsNullOrWhiteSpace(request.LayoutType))
+                if (string.IsNullOrWhiteSpace(request.SessionId) || request.LayoutType <= 0)
                     return BadRequest("SessionId and LayoutType are required.");
+
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                    return Unauthorized();
 
                 var (rows, cols) = LayoutPresets.GetGrid(request.LayoutType);
                 int expectedCount = rows * cols;
@@ -109,7 +120,8 @@ namespace Snap.Controllers
                     LayoutType = request.LayoutType
                 };
 
-                var imagePath = await _finalImageService.GenerateFinalImageAsync(finalRequest);
+                // Pass user.Id explicitly as second argument
+                var imagePath = await _finalImageService.GenerateFinalImageAsync(finalRequest, user.Id);
 
                 return Ok(new { message = "Final image generated successfully.", imagePath });
             }
@@ -118,6 +130,7 @@ namespace Snap.Controllers
                 return StatusCode(500, $"Error compiling and editing photos: {ex.Message}");
             }
         }
+
 
         // GET api/photo/download/{sessionId}
         [HttpGet("download/{sessionId}")]
