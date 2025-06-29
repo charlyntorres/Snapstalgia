@@ -17,7 +17,9 @@
     <header class="header-container">
         <div class="header-nav">
             <!--Snapstalgia Logo-->
-            <img class="logo" src="/Assets/Logo.png" alt="Snapstalgia Logo" />
+            <a asp-area="" asp-controller="Home" asp-action="HomePage">
+                <img class="logo" src="/Assets/Logo.png" alt="Snapstalgia Logo" />
+            </a>
 
             <!--Header Navigation Text-->
             <nav class="nav-texts">
@@ -54,12 +56,10 @@
                     <nav class="nav-texts1">
                         <a class="nav-link" asp-area="" asp-controller="About" asp-action="AboutPage">About Us</a>
                         <a class="nav-link" asp-area="" asp-controller="PrivacyPolicy" asp-action="PrivacyPolicyPage">Privacy Policy</a>
-                        <a class="nav-link" asp-area="" asp-controller="About" asp-action="AboutPage">FAQs</a>
                         <a class="nav-link" asp-area="" asp-controller="Contact" asp-action="ContactPage">Contact</a>
                     </nav>
 
                     <nav class="nav-texts2">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="HomePage">How it Worls</a>
                         <a class="nav-link" asp-area="" asp-controller="ChooseLayout" asp-action="ChooseLayoutPage">Choose Layout</a>
                         <a class="nav-link" asp-area="" asp-controller="Profile" asp-action="ProfilePage">Profile</a>
                     </nav>

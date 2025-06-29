@@ -298,6 +298,7 @@ input, textarea {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: -20px;
 }
 
 .footer-logo {
@@ -408,6 +409,7 @@ input, textarea {
     margin: 0;
     font-size: 15px;
     font-weight: 400;
+    margin-top: 20px;
 }
 
 .copyright-wrapper {
@@ -858,8 +860,11 @@ input, textarea {
     background-color: #F9E5DA;
     border-radius: 16px;
     margin-bottom: 20px;
-    box-shadow: 0 0 25px 2px rgba(186, 94, 98, 0.2);
     overflow: hidden;
+}
+
+.faq-item.open {
+    box-shadow: 0 0 25px 2px rgba(186, 94, 98, 0.2);
 }
 
 .faq-question {
