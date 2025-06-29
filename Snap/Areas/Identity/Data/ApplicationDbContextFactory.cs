@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Snap.Data;
 
-namespace Snap.Data
+namespace Snap.Areas.Identity.Data.Data
 {
     public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {
@@ -11,7 +10,7 @@ namespace Snap.Data
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
 
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=SnapDB;Trusted_Connection=True;MultipleActiveResultSets=true");
+            optionsBuilder.UseSqlServer("Server=(local)\\sqlexpress;Database=SnapDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;");
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }

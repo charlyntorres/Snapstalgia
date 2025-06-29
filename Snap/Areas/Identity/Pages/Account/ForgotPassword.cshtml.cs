@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Snap.Areas.Identity.Data;
+using Snap.Areas.Identity.Data.Data;
 
 namespace Snap.Areas.Identity.Pages.Account
 {

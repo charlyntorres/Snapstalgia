@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Snap.Areas.Identity.Data;
+using Snap.Areas.Identity.Data.Data;
 
 namespace Snap.Models
 {
