@@ -19,7 +19,7 @@ using Snap.Areas.Identity.Data.Data;
 
 namespace Snap.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class FinalImageController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
