@@ -4,8 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Snap.Models;
 using System.Threading.Tasks;
 using System.Linq;
-using Snap.Areas.Identity.Data;
-using Snap.Data;
+using Snap.Areas.Identity.Data.Data;
 
 namespace Snap.Controllers
 {

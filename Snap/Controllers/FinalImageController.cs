@@ -14,13 +14,12 @@ using System.IO;
 using System.Linq.Expressions;
 using System.Numerics;
 using System.Threading.Tasks;
-using Snap.Data;
 using Microsoft.AspNetCore.Identity;
-using Snap.Areas.Identity.Data;
+using Snap.Areas.Identity.Data.Data;
 
 namespace Snap.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class FinalImageController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

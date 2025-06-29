@@ -5,14 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Snap.Areas.Identity.Data.Data;
 
 #nullable disable
 
-namespace Snap.Migrations.ApplicationDb
+namespace Snap.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250623134036_AddPhotoTable")]
-    partial class AddPhotoTable
+    [Migration("20250629004133_Initial Create")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -157,7 +158,7 @@ namespace Snap.Migrations.ApplicationDb
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Snap.Areas.Identity.Data.ApplicationUser", b =>
+            modelBuilder.Entity("Snap.Areas.Identity.Data.Data.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -259,7 +260,7 @@ namespace Snap.Migrations.ApplicationDb
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Snap.Areas.Identity.Data.ApplicationUser", null)
+                    b.HasOne("Snap.Areas.Identity.Data.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -268,7 +269,7 @@ namespace Snap.Migrations.ApplicationDb
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Snap.Areas.Identity.Data.ApplicationUser", null)
+                    b.HasOne("Snap.Areas.Identity.Data.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -283,7 +284,7 @@ namespace Snap.Migrations.ApplicationDb
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Snap.Areas.Identity.Data.ApplicationUser", null)
+                    b.HasOne("Snap.Areas.Identity.Data.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -292,7 +293,7 @@ namespace Snap.Migrations.ApplicationDb
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Snap.Areas.Identity.Data.ApplicationUser", null)
+                    b.HasOne("Snap.Areas.Identity.Data.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -301,7 +302,7 @@ namespace Snap.Migrations.ApplicationDb
 
             modelBuilder.Entity("Snap.Models.Photo", b =>
                 {
-                    b.HasOne("Snap.Areas.Identity.Data.ApplicationUser", "User")
+                    b.HasOne("Snap.Areas.Identity.Data.Data.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Snap.Areas.Identity.Data;
+using Snap.Areas.Identity.Data.Data;
 
 namespace Snap.Areas.Identity.Pages.Account.Manage
 {

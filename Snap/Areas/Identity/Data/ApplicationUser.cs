@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-namespace Snap.Areas.Identity.Data
+namespace Snap.Areas.Identity.Data.Data
 {
     // Custom application user extending IdentityUser
     public class ApplicationUser : IdentityUser

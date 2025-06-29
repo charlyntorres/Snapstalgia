@@ -1900,7 +1900,7 @@ a {
 
 
 /*-------------------------------------------------------------------------*/
-/* Main Photostrip View Wrapper */
+/* Photostrip View */
 .photostripview-wrapper {
     width: 100%;
     padding: 80px 0 120px 0;
@@ -1934,41 +1934,51 @@ a {
 }
 
 .photostrip-view-content {
+    position: relative;
     width: 1100px;
-    padding: 40px 50px 100px;
     background-color: #EFA5A6;
     border-radius: 20px;
+    padding: 40px 50px 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
+    box-sizing: border-box;
 }
 
 .back-button {
-    align-self: flex-start;
+    position: absolute;
+    top: 40px;
+    left: 50px;
+    width: 50px;
+    height: 50px;
+    background-image: url('/Assets/photostrip-back.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 50%;
+    transition: background-image 0.3s ease;
+    cursor: pointer;
 }
 
-    .back-button img {
-        width: 50px;
-        height: 50px;
-        cursor: pointer;
+    .back-button:hover {
+        background-image: url('/Assets/photostrip-back-hover.png');
     }
 
 .photostrip-main {
-    padding-top: 30px;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 50px;
 }
 
 .snapstalgia-title {
-    font-family: 'TR Candice', cursive;
     font-size: 45px;
+    font-family: 'TR Candice', cursive;
+    font-weight: 400;
     color: #F9E5DA;
-    text-align: center;
     text-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+    text-align: center;
 }
 
 .photostrip-image-wrapper {
@@ -1979,8 +1989,8 @@ a {
 .photostrip-image {
     width: 275px;
     height: 830px;
-    object-fit: cover;
 }
+
 
 /*-----------------------------------------*/
 /* ===== Modal Base ===== */

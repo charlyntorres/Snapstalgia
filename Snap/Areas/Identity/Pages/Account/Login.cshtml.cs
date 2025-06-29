@@ -1,13 +1,11 @@
 ﻿#nullable disable
 
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Snap.Areas.Identity.Data;
+using Snap.Areas.Identity.Data.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -67,7 +65,7 @@ namespace Snap.Areas.Identity.Pages.Account
 
             returnUrl ??= Url.Content("~/");
 
-            // Clear existing external cookies
+            // Clear external cookies
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -83,14 +81,12 @@ namespace Snap.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);
-
                 if (user == null)
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
 
-                // Authenticate using the actual username
                 var result = await _signInManager.PasswordSignInAsync(user.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: true);
 
                 if (result.Succeeded)
@@ -111,7 +107,6 @@ namespace Snap.Areas.Identity.Pages.Account
                     return RedirectToPage("./Lockout");
                 }
 
-                // Account not locked yet – show how many attempts remain
                 var accessFailedCount = await _userManager.GetAccessFailedCountAsync(user);
                 var maxAttempts = _userManager.Options.Lockout.MaxFailedAccessAttempts;
                 var remainingAttempts = maxAttempts - accessFailedCount;
@@ -120,9 +115,7 @@ namespace Snap.Areas.Identity.Pages.Account
                 return Page();
             }
 
-            // Something went wrong, redisplay form
             return Page();
         }
-
     }
 }

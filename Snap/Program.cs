@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Snap.Areas.Identity.Data;
+using Snap.Areas.Identity.Data.Data;
 using Snap.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("AuthDbContextConnection");
+var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection");
 
-builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -27,7 +27,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<AuthDbContext>();
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 var app = builder.Build();
 
