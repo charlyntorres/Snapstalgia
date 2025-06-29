@@ -5,21 +5,19 @@
 <div class="photostrip-view-page">
     <div class="photostripview-wrapper">
         <div class="photostrip-view-container">
-            <div class="photostrip-view-box">
-                <div class="photostrip-view-content">
-                    <div class="back-button">
-                        <a asp-controller="Profile" asp-action="ProfilePage">
-                            <img src="~/Assets/photostrip-back.png" alt="Back" />
-                        </a>
-                    </div>
-                    <div class="photostrip-main">
-                        <h1 class="snapstalgia-title">Snapstalgia</h1>
-                        <div class="photostrip-image-wrapper">
-                            <img src="~/Assets/photostrip-sample.png" alt="Photostrip" class="photostrip-image" />
-                        </div>
+            <div class="photostrip-view-content">
+
+                <div class="back-button" onclick="location.href='@Url.Action("ProfilePage", "Profile")'"></div>
+
+                <div class="photostrip-main">
+                    <h1 class="snapstalgia-title">Snapstalgia</h1>
+                    <div class="photostrip-image-wrapper">
+                        <img src="~/Assets/photostrip-sample.png" alt="Photostrip" class="photostrip-image" />
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 </div>
+
