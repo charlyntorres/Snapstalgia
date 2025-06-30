@@ -4,14 +4,6 @@ using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp.PixelFormats;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using SixLabors.ImageSharp.Drawing;
-using Snap.Helpers;
-using SixLabors.ImageSharp.Processing.Processors.Filters;
-using SixLabors.ImageSharp.Processing.Processors;
 using Snap.Helpers;
 using Snap.Areas.Identity.Data.Data;
 
