@@ -2,6 +2,8 @@
     ViewData["Title"] = "Photostrip View";
 }
 
+@model Snap.Models.Photo
+
 <div class="photostrip-view-page">
     <div class="photostripview-wrapper">
         <div class="photostrip-view-container">
@@ -12,7 +14,7 @@
                 <div class="photostrip-main">
                     <h1 class="snapstalgia-title">Snapstalgia</h1>
                     <div class="photostrip-image-wrapper">
-                        <img src="~/Assets/photostrip-sample.png" alt="Photostrip" class="photostrip-image" />
+                        <img src="@Model.FilePath" alt="Photostrip" class="photostrip-image" />
                     </div>
                 </div>
 
