@@ -133,6 +133,7 @@ let retakeBtn, doneBtn;
 
 const photoFrames = document.querySelectorAll(".strip-frame");
 const photoCount = photoFrames.length;
+console.log("Number of photo frames found:", photoCount);
 
 let photosTaken = 0;
 let imageData = [];
@@ -155,7 +156,11 @@ function setupButtons() {
     doneBtn = document.createElement("button");
     doneBtn.textContent = "Done";
     doneBtn.className = "btn-1";
-    doneBtn.style.display = "none";
+    doneBtn.style.display = "none";    
+    doneBtn.addEventListener("click", () => {
+            localStorage.setItem("photos", JSON.stringify(imageData));
+            alert("Photos saved in local storage!");
+    });
     doneBtn.addEventListener("click", uploadAllPhotos);
 
     btnRow.appendChild(retakeBtn);
@@ -165,6 +170,7 @@ function setupButtons() {
 function resetSession() {
     photosTaken = 0;
     imageData = [];
+    localStorage.removeItem("photos");
     photoFrames.forEach(f => f.style.backgroundImage = "");
     countdownEl.textContent = "3";
     startBtn.style.display = "inline-block";
@@ -173,6 +179,7 @@ function resetSession() {
 }
 
 function startPhotoSession() {
+    resetSession();
     photosTaken = 0;
     imageData = [];
     startBtn.style.display = "none";
@@ -284,16 +291,25 @@ async function uploadAllPhotos() {
             alert("Layout type not set in localStorage. Please select a layout first.");
             return;
         }
+
         const layout = parseInt(storedLayout, 10);
         console.log('Parsed layout:', layout);
-        // Throw if invalid
         if (isNaN(layout)) throw new Error('Invalid layoutType: ' + storedLayout);
 
         for (let i = 0; i < imageData.length; i++) {
+            console.log(`Uploading photo ${i + 1} of ${imageData.length}`);
             await uploadPhoto(imageData[i], sessionId, i, layout);
         }
 
         localStorage.setItem('sessionId', sessionId);
+        console.log("✅ All photos uploaded. Waiting briefly before redirect...");
+
+        // ✅ Add delay to ensure files are flushed on backend
+        await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
+
+        localStorage.setItem("photos", JSON.stringify(imageData));
+        localStorage.setItem("sessionId", sessionId);
+
         alert('All photos uploaded successfully! Redirecting...');
 
         if (layout === 2) {
@@ -303,10 +319,13 @@ async function uploadAllPhotos() {
         } else {
             window.location.href = "/ChooseLayout/Customize1x3photo";
         }
+
     } catch (error) {
         alert("Error uploading photos: " + error.message);
+        console.error("Upload failed:", error);
     }
 }
+
 
 
 // Camera access request and initialization

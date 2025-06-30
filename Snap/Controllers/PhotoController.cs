@@ -13,6 +13,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 
 namespace Snap.Controllers
@@ -24,11 +25,13 @@ namespace Snap.Controllers
     {
         private readonly IFinalImageService _finalImageService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<PhotoController> _logger;
 
-        public PhotoController(IFinalImageService finalImageService, UserManager<ApplicationUser> userManager)
+        public PhotoController(IFinalImageService finalImageService, UserManager<ApplicationUser> userManager, ILogger<PhotoController> logger)
         {
             _finalImageService = finalImageService;
             _userManager = userManager;
+            _logger = logger;
         }
 
         // POST api/photo/upload
@@ -36,6 +39,7 @@ namespace Snap.Controllers
         public async Task<IActionResult> UploadPhoto([FromForm] PhotoUploadRequest request)
         {
             Console.WriteLine("=== UploadPhoto endpoint HIT ===");
+            _logger.LogInformation("Compile called with SessionId: {SessionId}, LayoutType: {LayoutType}", request.SessionId, request.LayoutType);
 
             if (!ModelState.IsValid)
             {
@@ -105,6 +109,7 @@ namespace Snap.Controllers
         [HttpPost("compile")]
         public async Task<IActionResult> CompileAndEdit([FromBody] EditPhotoRequest request)
         {
+            Console.WriteLine("=== UploadPhoto endpoint HIT ===");
             try
             {
                 //if (string.IsNullOrWhiteSpace(request.SessionId) || string.IsNullOrWhiteSpace(request.LayoutType))
@@ -117,14 +122,50 @@ namespace Snap.Controllers
 
                 var (rows, cols) = LayoutPresets.GetGrid(request.LayoutType);
                 int expectedCount = rows * cols;
+                _logger.LogInformation("Compiling session {SessionId} with layoutType {LayoutType}: expects {ExpectedCount} photos.", request.SessionId, request.LayoutType, expectedCount);
 
                 var tempSessionFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "temp", request.SessionId);
                 if (!Directory.Exists(tempSessionFolder))
+                {
+                    _logger.LogWarning("Session folder does not exist: {Folder}", tempSessionFolder);
                     return BadRequest("No photos uploaded for this session.");
+                }                    
 
-                var images = Directory.GetFiles(tempSessionFolder, "*.png");
-                if (images.Length < expectedCount)
-                    return BadRequest($"Expected {expectedCount} photos but found {images.Length}. Please upload all photos before compiling.");
+                //var images = Directory.GetFiles(tempSessionFolder, "*.png");
+                //if (images.Length < expectedCount)
+                //    return BadRequest($"Expected {expectedCount} photos but found {images.Length}. Please upload all photos before compiling.");
+                var allFiles = Directory.GetFiles(tempSessionFolder, "*.png");
+                _logger.LogInformation("Folder: {Folder}, total files: {Count}", tempSessionFolder, allFiles.Length);
+
+                var images = allFiles
+                .Where(f => Path.GetFileName(f).StartsWith(request.SessionId))
+                .OrderBy(f =>
+                {
+                    var parts = Path.GetFileNameWithoutExtension(f).Split('_');
+                    return int.TryParse(parts.ElementAtOrDefault(1), out var seq) ? seq : 9999;
+                })
+                .ToList();
+
+                int retries = 10;
+                while (images.Count < expectedCount && retries-- > 0)
+                {
+                    await Task.Delay(200);
+                    images = Directory.GetFiles(tempSessionFolder, "*.png")
+                        .Where(f => Path.GetFileName(f).StartsWith(request.SessionId))
+                        .OrderBy(f =>
+                        {
+                            var parts = Path.GetFileNameWithoutExtension(f).Split('_');
+                            return int.TryParse(parts.ElementAtOrDefault(1), out var seq) ? seq : 9999;
+                        })
+                        .ToList();
+                }
+
+                _logger.LogInformation("Found images for session {SessionId}:", request.SessionId);
+                foreach (var img in images)
+                    _logger.LogInformation(" - {FileName}", Path.GetFileName(img));
+
+                if (images.Count < expectedCount)
+                    return BadRequest($"Expected {expectedCount} photos but found {images.Count}. Please upload all photos before compiling.");
 
                 var finalRequest = new FinalImageRequest
                 {
@@ -143,6 +184,7 @@ namespace Snap.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error compiling photos for session {SessionId}", request.SessionId);
                 return StatusCode(500, $"Error compiling and editing photos: {ex.Message}");
             }
         }
@@ -171,5 +213,38 @@ namespace Snap.Controllers
             var fileName = Path.GetFileName(file);
             return File(bytes, contentType, fileName); 
         }
+
+        // GET api/photo/list/{sessionId}
+        [HttpGet("list/{sessionId}")]
+        public IActionResult ListSessionPhotos(string sessionId)
+        {
+            if (string.IsNullOrWhiteSpace(sessionId))
+                return BadRequest("SessionId is required.");
+
+            var tempSessionFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "temp", sessionId);
+
+            if (!Directory.Exists(tempSessionFolder))
+                return NotFound("No photos uploaded for this session.");
+
+            var allFiles = Directory.GetFiles(tempSessionFolder, "*.png");
+
+            var images = allFiles
+                .Where(f => Path.GetFileName(f).StartsWith(sessionId))
+                .OrderBy(f =>
+                {
+                    var parts = Path.GetFileNameWithoutExtension(f).Split('_');
+                    return int.TryParse(parts.ElementAtOrDefault(1), out var seq) ? seq : 9999;
+                })
+                .Select(f => Path.GetFileName(f))
+                .ToList();
+
+            return Ok(new
+            {
+                SessionId = sessionId,
+                PhotoCount = images.Count,
+                Photos = images
+            });
+        }
+
     }
 }
