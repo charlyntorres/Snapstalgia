@@ -137,7 +137,8 @@ namespace Snap.Services
                 finalImage.Mutate(ctx => ctx.DrawText(timestamp, timeFont, textColor, new PointF(x, y)));
             }
 
-            var fileName = $"{request.SessionId}_final_{DateTime.UtcNow:yyyyMMdd_HHmmss}.png";
+            var timeStamp = DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss");
+            var fileName = $"Photostrip_{timeStamp}.png";
             var finalPath = System.IO.Path.Combine(FinalFolder, fileName);
             await finalImage.SaveAsPngAsync(finalPath);
 
