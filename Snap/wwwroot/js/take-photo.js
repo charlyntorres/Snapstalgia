@@ -12,11 +12,13 @@ let photosTaken = 0;
 let imageData = [];
 let sessionId = generateSessionId();
 
+// Generate unique Session ID
 function generateSessionId() {
     // Simple unique ID based on timestamp and random number
     return 'session-' + Date.now() + '-' + Math.floor(Math.random() * 10000);
 }
 
+// Dynamically create Retake and Done buttons after taking all photos
 function setupButtons() {
     // Retake button
     retakeBtn = document.createElement("button");
@@ -40,6 +42,7 @@ function setupButtons() {
     btnRow.appendChild(doneBtn);
 }
 
+// Reset session
 function resetSession() {
     photosTaken = 0;
     imageData = [];
@@ -51,6 +54,7 @@ function resetSession() {
     doneBtn.style.display = "none";
 }
 
+// Start session
 function startPhotoSession() {
     resetSession();
     photosTaken = 0;
@@ -59,6 +63,7 @@ function startPhotoSession() {
     takeNextPhoto();
 }
 
+// Take next photo
 async function takeNextPhoto() {
     if (photosTaken >= photoCount) {
         retakeBtn.style.display = "inline-block";
@@ -86,6 +91,7 @@ async function takeNextPhoto() {
     setTimeout(takeNextPhoto, 500);
 }
 
+// Start capture countdown
 function startCountdown() {
     return new Promise(resolve => {
         let count = 3;
@@ -106,6 +112,7 @@ function startCountdown() {
     });
 }
 
+// Convert image to blob file
 function base64ToBlob(base64) {
     const byteString = atob(base64.split(',')[1]);
     const ab = new ArrayBuffer(byteString.length);
@@ -116,6 +123,7 @@ function base64ToBlob(base64) {
     return new Blob([ab], { type: 'image/png' });
 }
 
+// Upload individual photos of a session to db
 async function uploadPhoto(base64Data, sessionId, sequence, layoutType) {
     const blob = base64ToBlob(base64Data);
     const formData = new FormData();
@@ -143,11 +151,13 @@ async function uploadPhoto(base64Data, sessionId, sequence, layoutType) {
     return response.json();
 }
 
+// Parse layout type from string to int
 function parseLayoutType(layoutStr) {
     const match = layoutStr.match(/\d+$/);
     return match ? parseInt(match[0], 10) : 0;
 }
 
+// Upload all photos of a session to db
 async function uploadAllPhotos() {
     try {
         const storedLayout = localStorage.getItem("layoutType");

@@ -211,7 +211,7 @@ function renderCanvas() {
         }
     }
 
-    //download function
+    // Download function
     function finalizeDownload() {
         const downloadLink = document.getElementById("download");
         downloadLink.href = canvas.toDataURL("image/png");
@@ -221,6 +221,7 @@ function renderCanvas() {
 // Initial draw
 renderCanvas();
 
+// Upload final image to db and profile page
 document.getElementById("uploadBtn").addEventListener("click", async () => {
     try {
         const sessionId = localStorage.getItem("sessionId");
