@@ -115,7 +115,7 @@ function renderCanvas() {
     //}
     console.log("layoutType from localStorage:", layoutType);
     console.log("Photos loaded from localStorage:", photos);
-   
+
     const photoWidth = 250;
     const photoHeight = 180;
     const sidePadding = 13;
@@ -227,12 +227,17 @@ renderCanvas();
 document.getElementById("uploadBtn").addEventListener("click", async () => {
     try {
         const sessionId = localStorage.getItem("sessionId");
-        //const layoutType = localStorage.getItem("layoutType");
         const layoutType = parseInt(localStorage.getItem("layoutType"), 10);
-        const filterId = parseInt(localStorage.getItem("filterId")) || 0;
-        const stickerId = localStorage.getItem("stickerId") ? parseInt(localStorage.getItem("stickerId")) : null;
-        const frameColor = localStorage.getItem("frameColor") || "";
-        const includeTimestamp = localStorage.getItem("includeTimestamp") === "true";
+
+        //const filterId = parseInt(localStorage.getItem("filterId")) || 0;
+        //const stickerId = localStorage.getItem("stickerId") ? parseInt(localStorage.getItem("stickerId")) : null;
+        //const frameColor = localStorage.getItem("frameColor") || "";
+        //const includeTimestamp = localStorage.getItem("includeTimestamp") === "true";
+
+        const filterId = selectedFilterId;
+        const frameColor = selectedFrameColor;
+        const includeTimestampFlag = includeTimestamp;
+        const stickerId = selectedStickerFrontId;
 
         console.log("Uploading with payload:", {
             sessionId,
