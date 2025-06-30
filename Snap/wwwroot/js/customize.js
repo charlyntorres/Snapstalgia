@@ -108,12 +108,14 @@ if (timestampToggle) {
 
 // Canvas rendering
 function renderCanvas() {
-    if (photos.length !== layoutType) {
-        console.warn(`Expected ${layoutType} photos. Found:`, photos.length);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        return;
-    }
-
+    //if (photos.length !== layoutType) {
+    //    console.warn(`Expected ${layoutType} photos. Found:`, photos.length);
+    //    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //    return;
+    //}
+    console.log("layoutType from localStorage:", layoutType);
+    console.log("Photos loaded from localStorage:", photos);
+   
     const photoWidth = 250;
     const photoHeight = 180;
     const sidePadding = 13;
@@ -246,6 +248,9 @@ document.getElementById("uploadBtn").addEventListener("click", async () => {
             return;
         }
 
+        // Delay to ensure image files are saved before compile
+        await new Promise(resolve => setTimeout(resolve, 750)); // 750ms
+
         const payload = {
             SessionId: sessionId,
             LayoutType: layoutType,
@@ -255,13 +260,15 @@ document.getElementById("uploadBtn").addEventListener("click", async () => {
             IncludeTimestamp: includeTimestamp
         };
 
-        const response = await fetch("/api/photo/compile", {
+        const response = await fetch("https://localhost:7238/api/photo/compile", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(payload)
         });
+        console.log("Calling /api/photo/compile...");
+
 
         if (!response.ok) {
             const error = await response.text();
