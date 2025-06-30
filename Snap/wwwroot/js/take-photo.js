@@ -123,6 +123,7 @@
 //    }
 //});
 
+console.log("Initial localStorage layoutType:", localStorage.getItem("layoutType"));
 
 const video = document.getElementById("video");
 const countdownEl = document.querySelector(".countdown");
@@ -232,32 +233,61 @@ function base64ToBlob(base64) {
     for (let i = 0; i < byteString.length; i++) {
         ia[i] = byteString.charCodeAt(i);
     }
-    return new Blob([ab], { type: 'image/jpeg' });
+    return new Blob([ab], { type: 'image/png' });
 }
 
 async function uploadPhoto(base64Data, sessionId, sequence, layoutType) {
+    console.log("uploadPhoto called with layoutType:", layoutType);
     const blob = base64ToBlob(base64Data);
     const formData = new FormData();
-    formData.append('File', blob, `${sessionId}_${sequence}.jpg`);
+    formData.append('File', blob, `${sessionId}_${sequence}.png`);
     formData.append('SessionId', sessionId);
     formData.append('Sequence', sequence);
     formData.append('LayoutType', layoutType);
 
-    const response = await fetch('/api/photo/upload', {
+    console.log('Sending form data:');
+    for (const pair of formData.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`);
+    }
+
+    const response = await fetch('https://localhost:7238/api/photo/upload', {
         method: 'POST',
         body: formData
     });
 
     if (!response.ok) {
-        throw new Error(`Upload failed for photo ${sequence}`);
+        let errorText;
+        try {
+            const errorData = await response.json();
+            errorText = errorData.message || JSON.stringify(errorData);
+        } catch {
+            errorText = await response.text();
+        }
+        console.error('Upload failed:', errorText);
+        throw new Error(errorText || `Upload failed with status ${response.status}`);
     }
+
 
     return response.json();
 }
 
+function parseLayoutType(layoutStr) {
+    const match = layoutStr.match(/\d+$/);
+    return match ? parseInt(match[0], 10) : 0;
+}
+
 async function uploadAllPhotos() {
     try {
-        const layout = startBtn.dataset.layout;
+        const storedLayout = localStorage.getItem("layoutType");
+        console.log('Stored layout from localStorage:', storedLayout);
+        if (!storedLayout) {
+            alert("Layout type not set in localStorage. Please select a layout first.");
+            return;
+        }
+        const layout = parseInt(storedLayout, 10);
+        console.log('Parsed layout:', layout);
+        // Throw if invalid
+        if (isNaN(layout)) throw new Error('Invalid layoutType: ' + storedLayout);
 
         for (let i = 0; i < imageData.length; i++) {
             await uploadPhoto(imageData[i], sessionId, i, layout);
@@ -266,9 +296,9 @@ async function uploadAllPhotos() {
         localStorage.setItem('sessionId', sessionId);
         alert('All photos uploaded successfully! Redirecting...');
 
-        if (layout === "1x2") {
+        if (layout === 2) {
             window.location.href = "/ChooseLayout/Customize1x2photo";
-        } else if (layout === "1x4") {
+        } else if (layout === 4) {
             window.location.href = "/ChooseLayout/Customize1x4photo";
         } else {
             window.location.href = "/ChooseLayout/Customize1x3photo";
@@ -277,6 +307,7 @@ async function uploadAllPhotos() {
         alert("Error uploading photos: " + error.message);
     }
 }
+
 
 // Camera access request and initialization
 navigator.mediaDevices.getUserMedia({ video: true })
