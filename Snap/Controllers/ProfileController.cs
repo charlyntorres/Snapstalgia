@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Snap.Models;
 using Snap.ViewModels;
 using Snap.Areas.Identity.Data.Data;
 
@@ -68,10 +67,8 @@ namespace Snap.Controllers
             if (photo == null) return NotFound();
             
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", photo.FilePath.TrimStart('~', '/'));
-            if (System.IO.File.Exists(filePath))
-            {
-                System.IO.File.Delete(filePath);
-            }
+            if (System.IO.File.Exists(filePath))            
+                System.IO.File.Delete(filePath);            
 
             _context.Photos.Remove(photo);
             await _context.SaveChangesAsync();
