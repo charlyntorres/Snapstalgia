@@ -20,7 +20,7 @@ namespace Snap.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class PhotoController : ControllerBase
     {
         private readonly IFinalImageService _finalImageService;

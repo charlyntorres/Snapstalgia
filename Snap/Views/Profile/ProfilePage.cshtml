@@ -3,14 +3,16 @@
     ViewData["Title"] = "Profile";
 }
 
+@model Snap.ViewModels.ProfileViewModel
+
 <div class="profile-page">
     <div class="profile-container">
         <!-- Account Details Section -->
         <div class="account-details">
             <h2 class="account-title">Account Details</h2>
             <div class="account-info">
-                <p><span class="label">Username: </span><span class="value">caleb_john</span></p>
-                <p><span class="label">Email: </span><span class="value">cjsb07@gmail.com</span></p>
+                <p><span class="label">Username: </span><span class="value">@Model.Username</span></p>
+                <p><span class="label">Email: </span><span class="value">@Model.Email</span></p>
                 <button class="btn-logout" onclick="openLogoutModal()">Logout</button>
             </div>
         </div>
@@ -19,16 +21,19 @@
         <div class="photostrips-section">
             <h2 class="strip-title">Your Photo Strips</h2>
 
-            @for (int i = 1; i <= 5; i++)
+            @foreach (var photo in Model.PhotoStrips)
             {
                 <div class="photostrip">
                     <div class="strip-meta">
-                        <a asp-controller="Profile" asp-action="PhotostripView" class="strip-name hoverable">Photostrip @i</a>
-                        <div class="strip-date">@(new[] { "June 17, 2025", "June 14, 2025", "June 01, 2025", "May 30, 2025", "May 11, 2025" }[i - 1])</div>
+                        <a asp-controller="Profile" asp-action="PhotostripView" asp-route-id="@photo.Id" class="strip-name hoverable">@System.IO.Path.GetFileName(photo.FilePath)</a>
+                        <div class="strip-date">@photo.CreatedAt.ToLocalTime().ToString("MMMM dd, yyyy")</div>
                     </div>
-                    <div class="strip-actions">
-                        <button class="btn-download">Download</button>
-                        <button class="btn-delete" onclick="openDeleteModal()">Delete</button>
+                    <div class="strip-actions">                        
+                        <a href="@photo.FilePath" download class="btn-download">Download</a>
+                        <form id="deleteForm-@photo.Id" asp-action="DeletePhotostrip" asp-controller="Profile" method="post" style="display:none;">
+                            <input type="hidden" name="id" value="@photo.Id" />
+                        </form>
+                        <button class="btn-delete" onclick="openDeleteModal(@photo.Id)">Delete</button>
                     </div>
                 </div>
             }
@@ -92,6 +97,8 @@
 
 @section Scripts {
     <script>
+        let pendingDeleteId = null;
+
         function openLogoutModal() {
             document.getElementById("logoutModal").style.display = "flex";
         }
@@ -113,17 +120,23 @@
             window.location.href = '/';
         }
 
-        function openDeleteModal() {
+        function openDeleteModal(photoId) {
+            pendingDeleteId = photoId;
             document.getElementById("deleteModal").style.display = "flex";
         }
 
         function closeDeleteModal() {
             document.getElementById("deleteModal").style.display = "none";
+            pendingDeleteId = null;
         }
 
         function confirmDelete() {
-            closeDeleteModal();
-            document.getElementById("deleteSuccessModal").style.display = "flex";
+            if (pendingDeleteId !== null) {
+                const form = document.getElementById(`deleteForm-${pendingDeleteId}`);
+                if (form) {
+                    form.submit();
+                }
+            }
         }
 
         function closeDeleteSuccessModal() {
