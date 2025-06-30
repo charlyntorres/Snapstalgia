@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Snap.Models 
+﻿namespace Snap.Models 
 {
     public class PhotoUploadRequest
     {        
