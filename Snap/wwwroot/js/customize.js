@@ -274,7 +274,6 @@ document.getElementById("uploadBtn").addEventListener("click", async () => {
         });
         console.log("Calling /api/photo/compile...");
 
-
         if (!response.ok) {
             const error = await response.text();
             alert("Failed to upload: " + error);
@@ -283,8 +282,8 @@ document.getElementById("uploadBtn").addEventListener("click", async () => {
 
         const result = await response.json();
         alert("Photo uploaded and saved successfully!");
-
-        // Optionally update UI or redirect here
+        
+        window.location.href = "/Profile/ProfilePage";
     } catch (err) {
         alert("Unexpected error: " + err.message);
     }
