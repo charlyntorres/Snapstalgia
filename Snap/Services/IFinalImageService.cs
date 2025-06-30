@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Snap.Models;
+﻿using Snap.Models;
 
 namespace Snap.Services
 {
