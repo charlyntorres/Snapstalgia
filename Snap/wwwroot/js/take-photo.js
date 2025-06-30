@@ -6,7 +6,6 @@ let retakeBtn, doneBtn;
 
 const photoFrames = document.querySelectorAll(".strip-frame");
 const photoCount = photoFrames.length;
-console.log("Number of photo frames found:", photoCount);
 
 let photosTaken = 0;
 let imageData = [];

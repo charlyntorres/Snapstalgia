@@ -266,8 +266,8 @@ document.getElementById("uploadBtn").addEventListener("click", async () => {
 
         const result = await response.json();
         alert("Photo uploaded and saved successfully!");
-
-        // Optionally update UI or redirect here
+        
+        window.location.href = "/Profile/ProfilePage";
     } catch (err) {
         alert("Unexpected error: " + err.message);
     }
