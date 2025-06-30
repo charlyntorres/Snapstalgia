@@ -35,6 +35,22 @@ namespace Snap.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> UploadPhoto([FromForm] PhotoUploadRequest request)
         {
+            Console.WriteLine("=== UploadPhoto endpoint HIT ===");
+
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+
+                // Log errors on server console (or your preferred logging)
+                Console.WriteLine("ModelState validation errors:");
+                foreach (var err in errors)
+                {
+                    Console.WriteLine(err);
+                }
+
+                return BadRequest(new { message = "Model validation failed", errors });
+            }
+
             if (string.IsNullOrWhiteSpace(request.SessionId) || request.File == null)
                 return BadRequest(new { message = "SessionId and photo file are required." });
 
