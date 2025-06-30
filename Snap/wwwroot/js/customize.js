@@ -1,6 +1,6 @@
 ﻿// Shared JavaScript for 1x2, 1x3, 1x4 customization pages
+
 const layoutType = parseInt(localStorage.getItem("layoutType"), 10);
-//const layoutFolder = layoutType === 2 ? "2" : layoutType === 3 ? "3" : "4";
 const canvas = document.getElementById("strip-fr");
 const ctx = canvas.getContext("2d");
 
@@ -92,7 +92,6 @@ function addGrainNoiseToArea(ctx, x, y, width, height, intensity = 0.05) {
         data[i + 1] = Math.min(255, Math.max(0, data[i + 1] + noise)); // G
         data[i + 2] = Math.min(255, Math.max(0, data[i + 2] + noise)); // B
     }
-
     ctx.putImageData(imageData, x, y);
 }
 
@@ -108,13 +107,11 @@ if (timestampToggle) {
 
 // Canvas rendering
 function renderCanvas() {
-    //if (photos.length !== layoutType) {
-    //    console.warn(`Expected ${layoutType} photos. Found:`, photos.length);
-    //    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    //    return;
-    //}
-    console.log("layoutType from localStorage:", layoutType);
-    console.log("Photos loaded from localStorage:", photos);
+    if (photos.length !== layoutType) {
+        console.warn(`Expected ${layoutType} photos. Found:`, photos.length);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+    }
 
     const photoWidth = 250;
     const photoHeight = 180;
@@ -214,7 +211,7 @@ function renderCanvas() {
         }
     }
 
-    //download function
+    // Download function
     function finalizeDownload() {
         const downloadLink = document.getElementById("download");
         downloadLink.href = canvas.toDataURL("image/png");
@@ -224,29 +221,15 @@ function renderCanvas() {
 // Initial draw
 renderCanvas();
 
+// Upload final image to db and profile page
 document.getElementById("uploadBtn").addEventListener("click", async () => {
     try {
         const sessionId = localStorage.getItem("sessionId");
         const layoutType = parseInt(localStorage.getItem("layoutType"), 10);
-
-        //const filterId = parseInt(localStorage.getItem("filterId")) || 0;
-        //const stickerId = localStorage.getItem("stickerId") ? parseInt(localStorage.getItem("stickerId")) : null;
-        //const frameColor = localStorage.getItem("frameColor") || "";
-        //const includeTimestamp = localStorage.getItem("includeTimestamp") === "true";
-
         const filterId = selectedFilterId;
         const frameColor = selectedFrameColor;
         const includeTimestampFlag = includeTimestamp;
         const stickerId = selectedStickerFrontId;
-
-        console.log("Uploading with payload:", {
-            sessionId,
-            layoutType,
-            filterId,
-            stickerId,
-            frameColor,
-            includeTimestamp,
-        });
 
         if (!sessionId || !layoutType) {
             alert("Missing session or layout information.");
@@ -254,7 +237,7 @@ document.getElementById("uploadBtn").addEventListener("click", async () => {
         }
 
         // Delay to ensure image files are saved before compile
-        await new Promise(resolve => setTimeout(resolve, 750)); // 750ms
+        await new Promise(resolve => setTimeout(resolve, 300));
 
         const payload = {
             SessionId: sessionId,
@@ -271,8 +254,9 @@ document.getElementById("uploadBtn").addEventListener("click", async () => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(payload)
-        });
-        console.log("Calling /api/photo/compile...");
+        });        
+
+        window.location.href = "/Profile/ProfilePage";
 
         if (!response.ok) {
             const error = await response.text();

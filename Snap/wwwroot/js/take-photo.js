@@ -1,131 +1,4 @@
-﻿//const video = document.getElementById("video");
-//const countdownEl = document.querySelector(".countdown");
-//const cameraFrame = document.querySelector(".camera-frame");
-//const photoStrip = document.querySelector(".photo-strip");
-//const startBtn = document.querySelector(".btn-start");
-//let retakeBtn, doneBtn;
-
-//let photoCount = document.querySelectorAll(".strip-frame").length;
-//let photosTaken = 0;
-//let imageData = [];
-
-//function setupButtons() {
-//    // Create Retake and Done buttons
-//    retakeBtn = document.createElement("button");
-//    retakeBtn.textContent = "Retake";
-//    retakeBtn.className = "btn-1";
-//    retakeBtn.style.display = "none";
-//    retakeBtn.addEventListener("click", resetSession);
-
-//    doneBtn = document.createElement("button");
-//    doneBtn.textContent = "Done";
-//    doneBtn.className = "btn-1";
-//    doneBtn.style.display = "none";
-//    doneBtn.addEventListener("click", () => {
-//        localStorage.setItem("photos", JSON.stringify(imageData));
-//        alert("Photos saved in local storage!");
-//    });
-
-//    document.querySelector(".btn-row").appendChild(retakeBtn);
-//    document.querySelector(".btn-row").appendChild(doneBtn);
-//}
-
-//function resetSession() {
-//    photosTaken = 0;
-//    imageData = [];
-//    document.querySelectorAll(".strip-frame").forEach(f => f.style.backgroundImage = "");
-//    countdownEl.textContent = "3";
-//    startBtn.style.display = "inline-block";
-//    retakeBtn.style.display = "none";
-//    doneBtn.style.display = "none";
-//}
-
-//function startPhotoSession() {
-//    photosTaken = 0;
-//    imageData = [];
-//    startBtn.style.display = "none";
-//    takeNextPhoto();
-//}
-
-//async function takeNextPhoto() {
-//    if (photosTaken >= photoCount) {
-//        retakeBtn.style.display = "inline-block";
-//        doneBtn.style.display = "inline-block";
-//        return;
-//    }
-
-//    await startCountdown();
-
-//    const canvas = document.createElement("canvas");
-//    canvas.width = video.videoWidth;
-//    canvas.height = video.videoHeight;
-//    const ctx = canvas.getContext("2d");
-
-//    ctx.translate(canvas.width, 0);
-//    ctx.scale(-1, 1); // Mirror image
-//    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-//    const photo = canvas.toDataURL("image/jpeg");
-//    imageData.push(photo);
-
-//    const frame = document.querySelectorAll(".strip-frame")[photosTaken];
-//    frame.style.backgroundImage = `url(${photo})`;
-
-//    photosTaken++;
-//    setTimeout(takeNextPhoto, 500); // Delay before next
-//}
-
-//function startCountdown() {
-//    return new Promise(resolve => {
-//        let count = 3;
-//        countdownEl.textContent = count;
-
-//        const countdown = setInterval(() => {
-//            count--;
-//            countdownEl.textContent = count > 0 ? count : "📸";
-
-//            if (count === 0) {
-//                clearInterval(countdown);
-//                setTimeout(() => {
-//                    countdownEl.textContent = "";
-//                    resolve();
-//                }, 500);
-//            }
-//        }, 1000);
-//    });
-//}
-
-//// Request camera access
-//navigator.mediaDevices.getUserMedia({ video: true })
-//    .then(stream => {
-//        video.srcObject = stream;
-//    })
-//    .catch(err => {
-//        alert("Camera access denied or not available.");
-//    });
-
-//// Initialize
-//startBtn.addEventListener("click", startPhotoSession);
-//setupButtons();
-
-
-//// redirect to designated customize photo per layout when done
-//doneBtn.addEventListener("click", () => {
-//    localStorage.setItem("photos", JSON.stringify(imageData));
-//    const layout = startBtn.dataset.layout;
-
-//    if (layout === "1x2") {
-//        window.location.href = "/ChooseLayout/Customize1x2photo";
-//    } else if (layout === "1x4") {
-//        window.location.href = "/ChooseLayout/Customize1x4photo";
-//    } else {
-//        window.location.href = "/ChooseLayout/Customize1x3photo";
-//    }
-//});
-
-console.log("Initial localStorage layoutType:", localStorage.getItem("layoutType"));
-
-const video = document.getElementById("video");
+﻿const video = document.getElementById("video");
 const countdownEl = document.querySelector(".countdown");
 const startBtn = document.querySelector(".btn-start");
 const btnRow = document.querySelector(".btn-row");
@@ -133,17 +6,18 @@ let retakeBtn, doneBtn;
 
 const photoFrames = document.querySelectorAll(".strip-frame");
 const photoCount = photoFrames.length;
-console.log("Number of photo frames found:", photoCount);
 
 let photosTaken = 0;
 let imageData = [];
 let sessionId = generateSessionId();
 
+// Generate unique Session ID
 function generateSessionId() {
     // Simple unique ID based on timestamp and random number
-    return 'sess-' + Date.now() + '-' + Math.floor(Math.random() * 10000);
+    return 'session-' + Date.now() + '-' + Math.floor(Math.random() * 10000);
 }
 
+// Dynamically create Retake and Done buttons after taking all photos
 function setupButtons() {
     // Retake button
     retakeBtn = document.createElement("button");
@@ -167,6 +41,7 @@ function setupButtons() {
     btnRow.appendChild(doneBtn);
 }
 
+// Reset session
 function resetSession() {
     photosTaken = 0;
     imageData = [];
@@ -178,6 +53,7 @@ function resetSession() {
     doneBtn.style.display = "none";
 }
 
+// Start session
 function startPhotoSession() {
     resetSession();
     photosTaken = 0;
@@ -186,6 +62,7 @@ function startPhotoSession() {
     takeNextPhoto();
 }
 
+// Take next photo
 async function takeNextPhoto() {
     if (photosTaken >= photoCount) {
         retakeBtn.style.display = "inline-block";
@@ -213,6 +90,7 @@ async function takeNextPhoto() {
     setTimeout(takeNextPhoto, 500);
 }
 
+// Start capture countdown
 function startCountdown() {
     return new Promise(resolve => {
         let count = 3;
@@ -233,6 +111,7 @@ function startCountdown() {
     });
 }
 
+// Convert image to blob file
 function base64ToBlob(base64) {
     const byteString = atob(base64.split(',')[1]);
     const ab = new ArrayBuffer(byteString.length);
@@ -243,19 +122,15 @@ function base64ToBlob(base64) {
     return new Blob([ab], { type: 'image/png' });
 }
 
+// Upload individual photos of a session to db
 async function uploadPhoto(base64Data, sessionId, sequence, layoutType) {
-    console.log("uploadPhoto called with layoutType:", layoutType);
     const blob = base64ToBlob(base64Data);
     const formData = new FormData();
+
     formData.append('File', blob, `${sessionId}_${sequence}.png`);
     formData.append('SessionId', sessionId);
     formData.append('Sequence', sequence);
     formData.append('LayoutType', layoutType);
-
-    console.log('Sending form data:');
-    for (const pair of formData.entries()) {
-        console.log(`${pair[0]}: ${pair[1]}`);
-    }
 
     const response = await fetch('https://localhost:7238/api/photo/upload', {
         method: 'POST',
@@ -270,42 +145,37 @@ async function uploadPhoto(base64Data, sessionId, sequence, layoutType) {
         } catch {
             errorText = await response.text();
         }
-        console.error('Upload failed:', errorText);
         throw new Error(errorText || `Upload failed with status ${response.status}`);
     }
-
-
     return response.json();
 }
 
+// Parse layout type from string to int
 function parseLayoutType(layoutStr) {
     const match = layoutStr.match(/\d+$/);
     return match ? parseInt(match[0], 10) : 0;
 }
 
+// Upload all photos of a session to db
 async function uploadAllPhotos() {
     try {
         const storedLayout = localStorage.getItem("layoutType");
-        console.log('Stored layout from localStorage:', storedLayout);
         if (!storedLayout) {
             alert("Layout type not set in localStorage. Please select a layout first.");
             return;
         }
 
         const layout = parseInt(storedLayout, 10);
-        console.log('Parsed layout:', layout);
         if (isNaN(layout)) throw new Error('Invalid layoutType: ' + storedLayout);
 
         for (let i = 0; i < imageData.length; i++) {
-            console.log(`Uploading photo ${i + 1} of ${imageData.length}`);
             await uploadPhoto(imageData[i], sessionId, i, layout);
         }
 
         localStorage.setItem('sessionId', sessionId);
-        console.log("✅ All photos uploaded. Waiting briefly before redirect...");
 
-        // ✅ Add delay to ensure files are flushed on backend
-        await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
+        // Add delay to ensure files are flushed on backend
+        await new Promise(resolve => setTimeout(resolve, 500));
 
         localStorage.setItem("photos", JSON.stringify(imageData));
         localStorage.setItem("sessionId", sessionId);
@@ -322,11 +192,8 @@ async function uploadAllPhotos() {
 
     } catch (error) {
         alert("Error uploading photos: " + error.message);
-        console.error("Upload failed:", error);
     }
 }
-
-
 
 // Camera access request and initialization
 navigator.mediaDevices.getUserMedia({ video: true })
