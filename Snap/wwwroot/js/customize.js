@@ -255,6 +255,8 @@ document.getElementById("uploadBtn").addEventListener("click", async () => {
             body: JSON.stringify(payload)
         });        
 
+        window.location.href = "/Profile/ProfilePage";
+
         if (!response.ok) {
             const error = await response.text();
             alert("Failed to upload: " + error);
