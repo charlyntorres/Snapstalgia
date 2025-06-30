@@ -1,4 +1,8 @@
-﻿namespace Snap.Helpers
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace Snap.Helpers
 {
     public static class StickerPresets
     {

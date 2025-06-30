@@ -1,4 +1,6 @@
-﻿namespace Snap.Models  
+﻿using System;
+
+namespace Snap.Models  
 {
     public class CapturedPhoto
     {

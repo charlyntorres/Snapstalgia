@@ -2,6 +2,7 @@
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using Azure.Core;
 
 namespace Snap.Helpers
 {
@@ -98,6 +99,7 @@ namespace Snap.Helpers
 
                 var greenShadow = Color.FromRgba(180, 255, 200, 25);
                 ctx.Fill(greenShadow);
+
                 ctx.Vignette(Color.FromRgba(0, 0, 0, 80));
             });
 
@@ -133,6 +135,7 @@ namespace Snap.Helpers
                     for (int x = 0; x < width; x++)
                     {
                         var pixel = row[x];
+
                         float noise = (float)(random.NextDouble() * 2 - 1) * intensity;
 
                         pixel.R = ClampByte(pixel.R + (int)(noise * 255));

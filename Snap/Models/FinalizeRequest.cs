@@ -9,4 +9,5 @@
         public bool IncludeTimestamp { get; set; }
         public int LayoutType { get; set; }
     }
+
 }

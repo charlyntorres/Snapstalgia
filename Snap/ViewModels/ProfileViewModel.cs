@@ -1,4 +1,5 @@
-﻿using Snap.Models;
+﻿using System.Collections.Generic;
+using Snap.Models;
 
 namespace Snap.ViewModels
 {

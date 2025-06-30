@@ -1,4 +1,5 @@
-﻿using Snap.Models;
+﻿using System.Threading.Tasks;
+using Snap.Models;
 
 namespace Snap.Services
 {
@@ -6,4 +7,5 @@ namespace Snap.Services
     {
         Task<string> GenerateFinalImageAsync(FinalImageRequest request, string userId);
     }
+
 }

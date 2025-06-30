@@ -1,4 +1,7 @@
-﻿namespace Snap.Helpers
+﻿using System;
+using System.Collections.Generic;
+
+namespace Snap.Helpers
 {
     public static class LayoutPresets
     {
