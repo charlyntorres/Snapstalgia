@@ -4,14 +4,6 @@ using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp.PixelFormats;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using SixLabors.ImageSharp.Drawing;
-using Snap.Helpers;
-using SixLabors.ImageSharp.Processing.Processors.Filters;
-using SixLabors.ImageSharp.Processing.Processors;
 using Snap.Helpers;
 using Snap.Areas.Identity.Data.Data;
 
@@ -38,10 +30,8 @@ namespace Snap.Services
                 throw new Exception("Session images folder not found.");
 
             var imageFiles = Directory.GetFiles(sessionFolder, "*.png").OrderBy(f => f).ToList();
-
             var (rows, cols) = LayoutPresets.GetGrid(request.LayoutType);
             var expectedCount = rows * cols;
-
             if (imageFiles.Count < expectedCount)
                 throw new Exception($"Not enough images for layout. Expected {expectedCount}, found {imageFiles.Count}.");
 
@@ -140,6 +130,7 @@ namespace Snap.Services
             var timeStamp = DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss");
             var fileName = $"Photostrip_{timeStamp}.png";
             var finalPath = System.IO.Path.Combine(FinalFolder, fileName);
+            
             await finalImage.SaveAsPngAsync(finalPath);
 
             // Save record to DB
@@ -151,10 +142,7 @@ namespace Snap.Services
             };
 
             _context.Photos.Add(photo);
-            await _context.SaveChangesAsync();
-            Console.WriteLine("Saving photo for userId: " + userId);
-            Console.WriteLine("Final image path: " + "/images/final/" + fileName);
-
+            await _context.SaveChangesAsync();            
 
             return photo.FilePath;
         }

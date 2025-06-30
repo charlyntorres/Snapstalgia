@@ -7,5 +7,4 @@ namespace Snap.Services
     {
         Task<string> GenerateFinalImageAsync(FinalImageRequest request, string userId);
     }
-
 }
