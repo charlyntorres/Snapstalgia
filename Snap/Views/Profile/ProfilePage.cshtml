@@ -30,8 +30,7 @@
                             @photo.CreatedAt.ToLocalTime().ToString("MMMM dd, yyyy")
                         </div>
                     </div>
-                    <div class="strip-actions">
-                        @* <a href="@photo.FilePath" download="Photostrip @item.StripNumber" class="btn-download">Download</a> *@
+                    <div class="strip-actions">                        
                         @{
                             var timestamp = photo.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd_HH-mm-ss");
                             var downloadName = $"Snapstalgia_{timestamp}.png";
