@@ -33,7 +33,6 @@ function setupButtons() {
     doneBtn.style.display = "none";
     doneBtn.addEventListener("click", () => {
         localStorage.setItem("photos", JSON.stringify(imageData));
-        alert("Photos saved in local storage!");
     });
     doneBtn.addEventListener("click", uploadAllPhotos);
 
@@ -179,8 +178,6 @@ async function uploadAllPhotos() {
 
         localStorage.setItem("photos", JSON.stringify(imageData));
         localStorage.setItem("sessionId", sessionId);
-
-        alert('All photos uploaded successfully! Redirecting...');
 
         if (layout === 2) {
             window.location.href = "/ChooseLayout/Customize1x2photo";
