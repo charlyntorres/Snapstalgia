@@ -7,7 +7,6 @@ using Snap.Services;
 
 namespace Snap.Controllers
 {
-    [Authorize]
     public class FinalImageController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

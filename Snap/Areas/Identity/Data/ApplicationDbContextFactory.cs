@@ -9,8 +9,8 @@ namespace Snap.Areas.Identity.Data.Data
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
-
-            optionsBuilder.UseSqlServer("Server=(local)\\sqlexpress;Database=SnapDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=SnapDB;Trusted_Connection=True;MultipleActiveResultSets=true");
+            // optionsBuilder.UseSqlServer("Server=(local)\\sqlexpress;Database=SnapDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;");
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }

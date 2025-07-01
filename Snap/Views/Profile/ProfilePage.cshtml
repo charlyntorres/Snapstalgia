@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Profile";
 }
 
@@ -28,7 +27,7 @@
                         <a asp-controller="Profile" asp-action="PhotostripView" asp-route-id="@photo.Id" class="strip-name hoverable">@System.IO.Path.GetFileName(photo.FilePath)</a>
                         <div class="strip-date">@photo.CreatedAt.ToLocalTime().ToString("MMMM dd, yyyy")</div>
                     </div>
-                    <div class="strip-actions">                        
+                    <div class="strip-actions">
                         <a href="@photo.FilePath" download class="btn-download">Download</a>
                         <form id="deleteForm-@photo.Id" asp-action="DeletePhotostrip" asp-controller="Profile" method="post" style="display:none;">
                             <input type="hidden" name="id" value="@photo.Id" />
@@ -41,6 +40,9 @@
     </div>
 </div>
 
+<!-- Hidden Logout Form -->
+<form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" method="post"></form>
+
 <!-- Logout Confirmation Modal -->
 <div id="logoutModal" class="modal">
     <div class="modal-content">
@@ -52,19 +54,6 @@
             <button class="btn-confirm" onclick="logoutUser()">Logout</button>
         </div>
         <div class="modal-close" onclick="closeLogoutModal()">×</div>
-    </div>
-</div>
-
-<!-- Logout Success Modal -->
-<div id="logoutSuccessModal" class="modal">
-    <div class="modal-content">
-        <img src="~/Assets/profile-check.png" alt="Check Icon" class="modal-icon">
-        <div class="modal-title">Logout successfully.</div>
-        <div class="modal-subtitle">See you again soon!</div>
-        <div class="modal-buttons">
-            <button class="btn-confirm" onclick="redirectToHome()">Done</button>
-        </div>
-        <div class="modal-close" onclick="closeLogoutSuccessModal()">×</div>
     </div>
 </div>
 
@@ -109,15 +98,7 @@
 
         function logoutUser() {
             closeLogoutModal();
-            document.getElementById("logoutSuccessModal").style.display = "flex";
-        }
-
-        function closeLogoutSuccessModal() {
-            document.getElementById("logoutSuccessModal").style.display = "none";
-        }
-
-        function redirectToHome() {
-            window.location.href = '/';
+            document.getElementById("logoutForm").submit();
         }
 
         function openDeleteModal(photoId) {
