@@ -258,14 +258,7 @@ document.getElementById("uploadBtn").addEventListener("click", async () => {
 
         window.location.href = "/Profile/ProfilePage";
 
-        if (!response.ok) {
-            const error = await response.text();
-            alert("Failed to upload: " + error);
-            return;
-        }
-
         const result = await response.json();
-        alert("Photo uploaded and saved successfully!");
 
         window.location.href = "/Profile/ProfilePage";
     } catch (err) {
