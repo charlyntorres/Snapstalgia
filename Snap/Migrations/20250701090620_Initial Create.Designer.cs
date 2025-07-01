@@ -12,7 +12,7 @@ using Snap.Areas.Identity.Data.Data;
 namespace Snap.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250629004133_Initial Create")]
+    [Migration("20250701090620_Initial Create")]
     partial class InitialCreate
     {
         /// <inheritdoc />

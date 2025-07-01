@@ -14,19 +14,16 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
                 <div class="fillup-form">
-                    <!-- Email -->
                     <div class="form">
                         <label asp-for="Input.Email">Email</label>
-                        <input asp-for="Input.Email" type="email" placeholder="example@gmail.com" id="email" class="form-control" required />
+                        <input asp-for="Input.Email" placeholder="example@gmail.com" class="form-control" />
                         <span asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
-
-                    <!-- Password -->
                     <div class="form">
                         <label asp-for="Input.Password">Password</label>
-                        <input asp-for="Input.Password" type="password" placeholder="Enter your password" id="password" class="form-control" required />
+                        <input asp-for="Input.Password" type="password" placeholder="Enter your password" class="form-control" />
                         <span asp-validation-for="Input.Password" class="text-danger"></span>
-                        <p class="forgot"><a asp-page="/Account/ForgotPassword"><i>Forgot Password?</i></a></p>
+                        <p class="forgot"><a asp-page="/Account/ForgotPassword">Forgot Password?</a></p>
                     </div>
                 </div>
 
