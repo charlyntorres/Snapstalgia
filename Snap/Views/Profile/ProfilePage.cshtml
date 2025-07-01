@@ -25,36 +25,20 @@
                 var photo = item.Photo;
                 <div class="photostrip">
                     <div class="strip-meta">
-                        <a asp-controller="Profile"
-                           asp-action="PhotostripView"
-                           asp-route-id="@photo.Id"
-                           class="strip-name hoverable">
-                            Photostrip @item.StripNumber
-                        </a>
+                        <a asp-controller="Profile" asp-action="PhotostripView" asp-route-id="@photo.Id" class="strip-name hoverable">Snapstalgia @item.StripNumber</a>
                         <div class="strip-date">
                             @photo.CreatedAt.ToLocalTime().ToString("MMMM dd, yyyy")
                         </div>
                     </div>
                     <div class="strip-actions">
-                        <a href="@photo.FilePath"
-                           download="Photostrip @item.StripNumber"
-                           class="btn-download">Download</a>
-
-                        <form id="deleteForm-@photo.Id"
-                              asp-action="DeletePhotostrip"
-                              asp-controller="Profile"
-                              method="post"
-                              style="display:none;">
+                        <a href="@photo.FilePath" download="Photostrip @item.StripNumber" class="btn-download">Download</a>
+                        <form id="deleteForm-@photo.Id" asp-action="DeletePhotostrip" asp-controller="Profile" method="post" style="display:none;">
                             <input type="hidden" name="id" value="@photo.Id" />
                         </form>
                         <button class="btn-delete" onclick="openDeleteModal(@photo.Id)">Delete</button>
                     </div>
                 </div>
             }
-
-
-
-
         </div>
     </div>
 </div>
