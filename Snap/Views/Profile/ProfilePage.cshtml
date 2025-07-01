@@ -31,7 +31,12 @@
                         </div>
                     </div>
                     <div class="strip-actions">
-                        <a href="@photo.FilePath" download="Photostrip @item.StripNumber" class="btn-download">Download</a>
+                        @* <a href="@photo.FilePath" download="Photostrip @item.StripNumber" class="btn-download">Download</a> *@
+                        @{
+                            var timestamp = photo.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd_HH-mm-ss");
+                            var downloadName = $"Snapstalgia_{timestamp}.png";
+                        }
+                        <a href="@photo.FilePath" download="@downloadName" class="btn-download">Download</a>
                         <form id="deleteForm-@photo.Id" asp-action="DeletePhotostrip" asp-controller="Profile" method="post" style="display:none;">
                             <input type="hidden" name="id" value="@photo.Id" />
                         </form>
