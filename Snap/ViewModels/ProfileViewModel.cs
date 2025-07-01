@@ -6,6 +6,6 @@ namespace Snap.ViewModels
     {
         public string Username { get; set; }
         public string Email { get; set; }
-        public List<Photo> PhotoStrips { get; set; }
+        public List<PhotoStripViewModel> PhotoStrips { get; set; }
     }
 }

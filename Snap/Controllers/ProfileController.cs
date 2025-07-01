@@ -25,16 +25,26 @@ namespace Snap.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
 
-            var photos = await _context.Photos
+            var chronologicalPhotos = await _context.Photos
                 .Where(p => p.UserId == user.Id)
-                .OrderByDescending(p => p.CreatedAt)
+                .OrderBy(p => p.CreatedAt)
                 .ToListAsync();
+
+            var displayPhotos = chronologicalPhotos
+                .OrderByDescending(p => p.CreatedAt)
+                .ToList();
+
+            var numberedPhotos = displayPhotos.Select(photo => new PhotoStripViewModel
+            {
+                Photo = photo,
+                StripNumber = chronologicalPhotos.IndexOf(photo) + 1
+            }).ToList();
 
             var viewModel = new ProfileViewModel
             {
                 Username = user.UserName,
                 Email = user.Email,
-                PhotoStrips = photos
+                PhotoStrips = numberedPhotos
             };
 
             return View(viewModel);
