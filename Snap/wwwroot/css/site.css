@@ -1987,8 +1987,10 @@ a {
 }
 
 .photostrip-image {
-    width: 275px;
-    height: 830px;
+    max-width: 275px;
+    height: auto;
+    object-fit: contain;
+    display: block;
 }
 
 
