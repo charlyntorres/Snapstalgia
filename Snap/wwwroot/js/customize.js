@@ -263,8 +263,6 @@ document.getElementById("uploadBtn").addEventListener("click", async () => {
             body: JSON.stringify(payload)
         });
 
-        window.location.href = "/Profile/ProfilePage";
-
         const result = await response.json();
 
         window.location.href = "/Profile/ProfilePage";
