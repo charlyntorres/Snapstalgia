@@ -105,6 +105,17 @@ if (timestampToggle) {
     });
 }
 
+// Dynamic brand and timestamp text colors
+function getContrastingTextColor(hexColor) {
+    const hex = hexColor.replace(/^#/, '');
+    const r = parseInt(hex.slice(0, 2), 16) / 255;
+    const g = parseInt(hex.slice(2, 4), 16) / 255;
+    const b = parseInt(hex.slice(4, 6), 16) / 255;
+    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+    return luminance < 0.5 ? "#F9E5DA" : "#354E52";
+}
+
 // Canvas rendering
 function renderCanvas() {
     if (photos.length !== layoutType) {
@@ -177,25 +188,14 @@ function renderCanvas() {
                 }
 
                 loaded++;
+                
                 if (loaded === layoutType) {
-
-                    // Brand name
-                    ctx.fillStyle = "#F9E5DA";
-                    ctx.font = "300 16px 'TR Candice', cursive";
-                    ctx.textAlign = "center";
-                    ctx.fillText("Snapstalgia", canvas.width / 2, canvas.height - 30);
-
-                    // Timestamp
-                    if (includeTimestamp) {
-                        ctx.font = "8px 'Bricolage Grotesque', sans-serif";
-                        ctx.fillText(new Date().toLocaleString(), totalWidth / 2, canvasHeight - 15);
-                    }
-
+                    drawBrandAndTimestamp();
                     drawFrontSticker();
                 }
             };
         });
-    }
+    }  
 
     // Draw front sticker
     function drawFrontSticker() {
@@ -216,12 +216,28 @@ function renderCanvas() {
         const downloadLink = document.getElementById("download");
         downloadLink.href = canvas.toDataURL("image/png");
 
-        // Local time timestamp format: YYYY-MM-DD_HH-MM-SS
         const now = new Date();
         const pad = (n) => n.toString().padStart(2, '0');
         const timestamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}_${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
-
         downloadLink.download = `Snapstalgia_${timestamp}.png`;
+    }
+}
+
+// Draw brand and timestamp
+function drawBrandAndTimestamp() {
+    const textColor = getContrastingTextColor(selectedFrameColor);
+
+    ctx.fillStyle = textColor;
+    ctx.textAlign = "center";
+
+    // Brand name
+    ctx.font = "300 16px 'TR Candice', cursive";
+    ctx.fillText("Snapstalgia", canvas.width / 2, canvas.height - 30);
+
+    // Timestamp
+    if (includeTimestamp) {
+        ctx.font = "8px 'Bricolage Grotesque', sans-serif";
+        ctx.fillText(new Date().toLocaleString(), canvas.width / 2, canvas.height - 15);
     }
 }
 
