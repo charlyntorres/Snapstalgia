@@ -110,7 +110,7 @@ namespace Snap.Services
 
             // Brand Text
             var brandFont = TryLoadFont(System.IO.Path.Combine("wwwroot", "Assets", "Fonts", "TR Candice.TTF"), 16);
-            var brandText = "SnapStalgia";
+            var brandText = "Snapstalgia";
             var brandSize = TextMeasurer.MeasureSize(brandText, new TextOptions(brandFont));
             var brandX = (finalWidth - brandSize.Width) / 2;
             var brandY = finalHeight - 43;
