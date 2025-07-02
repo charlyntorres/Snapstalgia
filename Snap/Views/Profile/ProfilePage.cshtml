@@ -19,18 +19,18 @@
         <!-- Photo Strips Section -->
         <div class="photostrips-section">
             <h2 class="strip-title">Your Photo Strips</h2>
-            
+
             @foreach (var item in Model.PhotoStrips)
             {
                 var photo = item.Photo;
-                <div class="photostrip">
+                <div class="photostrip" id="photostrip-@photo.Id">
                     <div class="strip-meta">
                         <a asp-controller="Profile" asp-action="PhotostripView" asp-route-id="@photo.Id" class="strip-name hoverable">Snapstalgia @item.StripNumber</a>
                         <div class="strip-date">
                             @photo.CreatedAt.ToLocalTime().ToString("MMMM dd, yyyy")
-                        </div>
+                            </div>
                     </div>
-                    <div class="strip-actions">                        
+                    <div class="strip-actions">
                         @{
                             var timestamp = photo.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd_HH-mm-ss");
                             var downloadName = $"Snapstalgia_{timestamp}.png";
@@ -119,11 +119,31 @@
         }
 
         function confirmDelete() {
-            if (pendingDeleteId !== null) {
-                const form = document.getElementById(`deleteForm-${pendingDeleteId}`);
-                if (form) {
-                    form.submit();
-                }
+            if (!pendingDeleteId) return;
+
+            const form = document.getElementById(`deleteForm-${pendingDeleteId}`);
+            if (!form) return;
+
+            const formData = new FormData(form);
+
+            fetch("/Profile/DeletePhotostrip", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Failed to delete.");
+                // Remove the photostrip from DOM
+                const strip = document.getElementById(`photostrip-${pendingDeleteId}`);
+                if (strip) strip.remove();
+
+                closeDeleteModal();
+                showDeleteSuccessModal();
+            })
+        }
+        function showDeleteSuccessModal() {
+            const modal = document.getElementById("deleteSuccessModal");
+            if (modal) {
+                modal.style.display = "flex";
             }
         }
 
