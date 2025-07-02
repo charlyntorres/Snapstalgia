@@ -503,6 +503,7 @@ input, textarea {
     justify-content: center;
     align-items: center;
     gap: 61px;
+    flex-wrap: wrap;
 }
 
     .about h1 {
@@ -713,7 +714,7 @@ input, textarea {
 
 .about-wrapper {
     background-color: var(--color-accent);
-    padding: 80px 0 120px 0;
+    padding: 80px 0 0 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -725,7 +726,6 @@ input, textarea {
     flex-direction: column;
     align-items: center;
     gap: 50px;
-    max-width: 890px;
     width: 100%;
 }
 
@@ -755,7 +755,7 @@ input, textarea {
     color: var(--color-text);
     text-align: justify;
     margin: 0 auto;
-    padding: 0 10px 80px;
+    padding: 0 10px 90px;
 }
 
 
@@ -770,7 +770,8 @@ input, textarea {
     flex-direction: column;
     align-items: center;
     gap: 30px;
-    max-width: 1200px;
+    width: 100%; 
+    max-width: 1243px;
 }
 
     /* Heading */
@@ -780,7 +781,7 @@ input, textarea {
         text-shadow: var(--shadow-default);
         font-weight: 400;
         font-size: 50px;
-        margin-bottom: 0;
+        margin-bottom: 30px;
     }
 
 /* Feature layout */
@@ -808,8 +809,8 @@ input, textarea {
 
     /* Icon styling */
     .feature img {
-        width: 100px;
-        height: 100px;
+        width: 130px;
+        height: 130px;
         background-color: var(--color-accent);
         border-radius: 50%;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
@@ -837,7 +838,7 @@ input, textarea {
 
 /* FAQ SECTION */
 .faq {
-    padding: 60px 20px;
+    padding: 90px 20px;
 }
 
 .faq-subtext {
@@ -845,7 +846,7 @@ input, textarea {
     font-weight: 400;
     color: var(--color-text);
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 55px;
     font-family: 'Bricolage Grotesque', sans-serif;
 }
 
@@ -1154,18 +1155,23 @@ input, textarea {
 
 /*-------------------------------------------------------------------------*/
 
-.login-page-wrapper, .signup-page-wrapper {
+.login-page-wrapper,
+.signup-page-wrapper,
+.forgot-page-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 80px 0 120px 0;
 }
 
-.login-wrapper, .signup-wrapper {
+.login-wrapper,
+.signup-wrapper,
+.forgot-wrapper {
     display: flex;
     width: 604px;
     flex-direction: column;
     align-items: center;
+    gap: 30px;
 }
 
 .login-header, .signup-header {
@@ -1176,7 +1182,7 @@ input, textarea {
     align-self: stretch;
 }
 
-.login-body, .signup-body {
+.login-body, .signup-body, .col-md-4 {
     display: flex;
     width: 300px;
     flex-direction: column;
@@ -1190,48 +1196,78 @@ input, textarea {
     flex-direction: column;
     align-items: flex-start;
     gap: 25px;
+    color: var(--color-primary);
 }
 
-.form {
+.form-floating-mb-3 label {
+    color: var(--color-primary);
+}
+
+.form, .form-floating-mb-3 {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
     align-self: stretch;
 }
 
-    .form input {
+    .form input,
+    .form-floating-mb-3 input {
         width: 268px;
         height: 50px;
+        padding: 0 15px;
+        border: 2px solid var(--color-primary);
+        border-radius: 10px;
+        background-color: var(--color-accent);
+        font-size: 14px;
+        font-family: inherit;
+        outline: none;
     }
 
-    .form label {
+        .form input::placeholder,
+        .form-floating-mb-3 input::placeholder {
+            color: #828282;
+            opacity: 0.7;
+        }
+
+        /* hover/focus effect */
+        .form input:focus,
+        .form-floating-mb-3 input:focus {
+            box-shadow: 0 0 5px rgba(201, 91, 95, 0.4);
+            border: 2px solid var(--color-primary);
+            background-color: var(--color-accent);
+        }
+
+    .form label,
+    .form-floating-mb-3 label {
         font-weight: 600;
         font-size: 18px;
+        margin-bottom: 8px;
     }
 
-    .form .forgot {
+    .login-wrapper .form .forgot a {
         font-weight: 400;
         font-size: 14px;
         text-decoration-line: underline;
+        color: var(--color-primary);
     }
 
-.login-wrapper .form:hover .forgot,
-.login-wrapper .form-btn:hover .create {
+.login-wrapper .form:hover .forgot a,
+.login-wrapper .form-btn:hover .create a {
     color: #BA5E62;
     cursor: pointer;
 }
 
-.login-wrapper .form:active .forgot,
-.login-wrapper .form-btn:active .create {
+.login-wrapper .form:active .forgot a,
+.login-wrapper .form-btn:active .create a {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
     cursor: pointer;
 }
 
-.login-wrapper .form-btn .create {
+.login-wrapper .form-btn .create a {
     font-weight: 400;
     font-size: 16px;
     text-decoration-line: underline;
+    color: var(--color-primary);
 }
 
 .form-btn {
@@ -1240,6 +1276,7 @@ input, textarea {
     align-items: center;
     gap: 15px;
     align-self: stretch;
+    margin-top: 30px;
 }
 
 /*sign-up header*/
@@ -1247,6 +1284,10 @@ input, textarea {
     text-align: center;
     width: 400px;
     padding-bottom: 20px;
+}
+
+.text-danger {
+    font-size: 14px;
 }
 
 /*-------------------------------------------------------------------------*/
@@ -1737,26 +1778,30 @@ video {
     }
 
 /*-------------------------------------------------------------------------*/
+
 /* Profile Page  */
+
+/*-------------------------------------------------------------------------*/
+
 .profile-page {
     background-color: #F9E5DA;
     min-height: 100vh;
-    padding: 50px 100px;
+    padding: 70px 250px 120px 130px;
     box-sizing: border-box;
     font-family: 'Bricolage Grotesque', sans-serif;
 }
 
 .profile-container {
     display: flex;
-    gap: 100px;
+    gap: 179px;
     align-items: flex-start;
+    flex-wrap: wrap;
 }
 
 .account-details {
     width: 412px;
     display: flex;
     flex-direction: column;
-    gap: 25px;
 }
 
 .account-title {
@@ -1764,13 +1809,13 @@ video {
     font-family: 'TR Candice', cursive;
     color: #BA5E62;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+    margin-left: -50px;
 }
 
 .account-info {
     padding: 0 20px;
     display: flex;
     flex-direction: column;
-    gap: 30px;
 }
 
 .label {
@@ -1786,6 +1831,7 @@ video {
 }
 
 .btn-logout {
+    margin-top: 10px;
     width: 120px;
     height: 45px;
     padding: 12px 39px;
@@ -1827,6 +1873,7 @@ video {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 10px;
 }
 
 .strip-meta {
@@ -1876,6 +1923,8 @@ video {
 .btn-download {
     background-color: #69AFAD;
     color: #F9E5DA;
+    width: 125px;
+    height: 40px;
 }
 
     .btn-download:hover {
@@ -1886,6 +1935,8 @@ video {
 .btn-delete {
     background-color: #BA5E62;
     color: white;
+    width: 110px;
+    height: 40px;
 }
 
     .btn-delete:hover {
@@ -1900,7 +1951,11 @@ a {
 
 
 /*-------------------------------------------------------------------------*/
+
 /* Photostrip View */
+
+/*-------------------------------------------------------------------------*/
+
 .photostripview-wrapper {
     width: 100%;
     padding: 80px 0 120px 0;
@@ -1912,7 +1967,6 @@ a {
 
 .photostrip-view-page {
     background-color: #F9E5DA;
-    padding: 60px 0;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -1994,8 +2048,12 @@ a {
 }
 
 
-/*-----------------------------------------*/
+/*-------------------------------------------------------------------------*/
+
 /* ===== Modal Base ===== */
+
+/*-------------------------------------------------------------------------*/
+
 .modal {
     display: none;
     position: fixed;
@@ -2053,8 +2111,8 @@ a {
     background-color: #828282;
     color: #F9E5DA;
     font-weight: 700;
+    width: 120px;
     border: none;
-    padding: 12px 39px;
     border-radius: 50px;
     font-size: 18px;
     font-family: 'Bricolage Grotesque', sans-serif;
