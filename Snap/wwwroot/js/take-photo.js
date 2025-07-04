@@ -131,7 +131,7 @@ async function uploadPhoto(base64Data, sessionId, sequence, layoutType) {
     formData.append('Sequence', sequence);
     formData.append('LayoutType', layoutType);
 
-    const response = await fetch('https://localhost:7238/api/photo/upload', {
+    const response = await fetch('/api/photo/upload', {
         method: 'POST',
         body: formData
     });
