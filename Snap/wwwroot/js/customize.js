@@ -271,7 +271,7 @@ document.getElementById("uploadBtn").addEventListener("click", async () => {
             IncludeTimestamp: includeTimestamp
         };
 
-        const response = await fetch("https://localhost:7238/api/photo/compile", {
+        const response = await fetch('/api/photo/compile', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
